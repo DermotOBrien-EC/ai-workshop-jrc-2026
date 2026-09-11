@@ -221,3 +221,11 @@ git add -A && git commit && git push
 ```
 
 Pages republishes from `docs/` a minute or two after each push to `main`.
+
+## Addendum, 11 September, morning
+
+A slide with this repository's address and a QR code was added to the deck
+before the closing slide (slide 28 of the main route), so the audience can find
+this page. The deck is now 44 slides (29 main route, 15 backup) and the PDF 44
+pages; the figures above that say 43 describe the night build. The same slide
+is in the joint workshop deck as slide 73.

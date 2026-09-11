@@ -491,6 +491,29 @@ Everything shown today, how to set up the tools, and how to try the experiment y
 All three are things a researcher does anyway; the assistant is added at the point where a second opinion is cheapest. Number one is the experiment's lesson applied: the assistant will ask for the things you had not thought to state, exactly where the May instructions went wrong. Number two works best with the PDFs attached and a request for page references, so every claim it makes can be checked. Number three: it will not know your field's conventions unless told, so name the journal or the audience. For anything that is not yet public, use the approved internal service. Point at the link: the public repository holds these slides, every number and where it comes from, the exact requests, a step-by-step guide to setting up Claude Code (for Anthropic's Fable) or the Codex command line (for OpenAI's Astra) on your own computer, and how to run the forecasting experiment and score it yourself; it uses public data.
 :::
 
+## Everything from this part, and how to try it yourself {#repo .tight}
+
+:::: {.columns}
+::: {.column width="38%"}
+![](figures/qr-public-repo.png){width="300" .nostretch}
+:::
+::: {.column width="62%"}
+[**github.com/DermotOBrien-EC/ai-workshop-jrc-2026**]{style="font-size:0.82em; white-space:nowrap"}
+
+- These slides, with every number and where it comes from
+- How to set up Claude Code or Codex, and run the experiment yourself
+- The exact requests, the run records, the second AI's marks
+:::
+::::
+
+::: {.takeaway}
+Ask, then check. Public repository, public data.
+:::
+
+::: {.notes}
+Leave this up while you take questions. Say the address once, slowly. Everything on it is free to reuse under the CC BY 4.0 notice on the closing slide. If someone asks about using these tools at the Commission: the setup guide says that whatever is in the folder is sent to the company running the model, so public data only, or the tools the staff guidance approves for anything else.
+:::
+
 # Ask, then check {.outro #close}
 
 The skill is no longer writing perfect instructions. It is asking good questions and judging the answers.

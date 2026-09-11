@@ -1,6 +1,6 @@
 # Workshop delivery, 11 September 2026 (V2)
 
-The deck has **43 slides: 28 in the main route and 15 backup slides.** The main
+The deck has **44 slides: 29 in the main route and 15 backup slides.** The main
 route is written for a **30-to-40-minute talk** to a mixed audience of JRC
 scientists and civil servants, many of whom have never used an AI assistant.
 There is no exercise and no breakout; the practical steps are in a written
@@ -20,7 +20,7 @@ AI's marks for the saved work.
 | 2–6 | 4–7 | 1. What these tools are, and the harness around them | A well-read new colleague, not a calculator; the software around it matters. |
 | 6–25 | 8–21 | 2. One experiment, and what it taught me | The best score used the answers; the newest AI asked the question that would have caught it; the recipe made forecasts more alike, not better. |
 | 25–33 | 22–27 | 3. How I work with AI now | Goal, ask, discuss, decide. Seven questions. You still check. |
-| 33–40 | 28 | Close and questions | "Ask, then check." |
+| 33–40 | 28–29 | The public repository, close and questions | "Ask, then check." |
 
 Plan for 33 minutes of speaking and 7 for questions. Rehearse once to 31 with a
 timer; real delivery runs longer. If the slot is 30 minutes, drop slides 18
@@ -55,7 +55,12 @@ Slides 20 and 21 are the two chart slides after the note: what each request leng
 forecasts, process and stopping behaviour; it did not measure conversational
 tone or intent recognition, and it is not a vendor ranking.
 
-Closing (slide 28): "The skill is no longer writing perfect instructions. It is
+Slide 28 is the public repository (github.com/DermotOBrien-EC/ai-workshop-jrc-2026)
+with a QR code: the slides, the setup guide for Claude Code and Codex, the
+experiment records and how to run it yourself. Say it in one breath and leave
+it up while people scan it.
+
+Closing (slide 29): "The skill is no longer writing perfect instructions. It is
 asking good questions and judging the answers." Leave it on screen for questions.
 
 ## Questions to expect

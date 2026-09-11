@@ -254,8 +254,9 @@ research/aggregate_ai_review.py; three backup slides. Not part of this audit and
 not independently verified. The reviewers found the same three headline peeks as
 the audit and one more (opus5_L1_r3, observed target-week temperature as an
 input, which the audit records under selection scope); on the looser
-test-selection class they were more lenient (26 attempts labelled test_selected
-read as clean), so the audit remains authoritative on the peek.
+class they were more lenient (26 attempts the audit flags, 24 chosen on the test
+week and 2 with a peek outside the delivered forecast, read as clean), so the
+audit remains authoritative on the peek.
 
 Backup pass, 10 September, late: a cold read of the backup section returned 43
 findings; the contradictions were fixed (a caption that called every score
@@ -274,5 +275,10 @@ V2, 11 September: five chart slides moved from the backup into the experiment
 part of the main route (one scale for all three request lengths; how often the
 OpenAI models stopped; what each request length bought in good practice; a
 range is not evidence; a second AI's marks), each with a one-line takeaway. The
-main route is 29 slides for a 30-to-40-minute slot; the earlier 24 slides are
-unchanged. Backup: 14 slides. No number changed.
+main route is 28 slides for a 30-to-40-minute slot (the ranges slide returned to
+the backup the same night); the earlier 24 slides are unchanged. Backup: 15
+slides. No number changed.
+
+Later on 11 September: a slide with a QR code for the public repository
+(github.com/DermotOBrien-EC/ai-workshop-jrc-2026) was added before the closing
+slide, so the main route is 29 slides and the deck 44. No number changed.
