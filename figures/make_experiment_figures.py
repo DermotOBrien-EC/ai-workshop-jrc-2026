@@ -67,7 +67,7 @@ for ax,(lv,title) in zip(axes,LEVELS):
     for s in ["top","right"]: ax.spines[s].set_visible(False)
 axes[0].set_yticks(range(len(ylabels))); axes[0].set_yticklabels([LABEL.get(m,m) for m in ylabels],fontsize=11)
 handles=[Line2D([],[],marker="o",color="w",markerfacecolor=INDIGO,markersize=9,label="Fair forecast, score checked by us"),
-         Line2D([],[],marker="D",color="w",markeredgecolor=INDIGO,markerfacecolor="white",markeredgewidth=2,markersize=9,label="The assistant's own number, not rechecked"),
+         Line2D([],[],marker="D",color="w",markeredgecolor=INDIGO,markerfacecolor="white",markeredgewidth=2,markersize=9,label="Assistant's own score, no forecast file to re-check"),
          Line2D([],[],marker="o",color="w",markerfacecolor=CORAL,markersize=9,label="The forecast itself peeked at the target week"),
          Line2D([],[],marker="o",color="w",markerfacecolor=GOLD,markersize=9,label="Peeked while choosing or checking, forecast itself clean")]
 fig.legend(handles=handles,loc="lower center",ncol=2,frameon=False,fontsize=11,bbox_to_anchor=(0.5,-0.02))
@@ -191,7 +191,7 @@ for lv,title in LEVELS:
     for s in ["top","right","left"]: ax.spines[s].set_visible(False)
     ax.tick_params(axis="y",length=0); ax.grid(axis="x",color=LINE,lw=0.6); ax.set_axisbelow(True)
     handles=[Line2D([],[],marker="o",color="w",markerfacecolor=INDIGO,markersize=11,label="Fair, checked by us"),
-             Line2D([],[],marker="D",color="w",markeredgecolor=INDIGO,markerfacecolor="white",markeredgewidth=2.4,markersize=10,label="The assistant's own number"),
+             Line2D([],[],marker="D",color="w",markeredgecolor=INDIGO,markerfacecolor="white",markeredgewidth=2.4,markersize=10,label="Assistant's own score, no forecast file to re-check"),
              Line2D([],[],marker="o",color="w",markerfacecolor=CORAL,markersize=11,label="The forecast itself peeked"),
              Line2D([],[],marker="o",color="w",markerfacecolor=GOLD,markersize=11,label="Peeked while choosing or checking"),
              Line2D([],[],marker="o",color="w",markerfacecolor=GREY,markersize=11,label="The audit could not decide"),
@@ -227,7 +227,7 @@ axes[1].set_xlabel("Average error, % (lower is better)",fontsize=14,color=GREY)
 axes[0].set_yticks(range(len(ylabels))); SHORTL=dict(LABEL); SHORTL["Opus 4.7"]="Claude Opus 4.7 (May model)"
 axes[0].set_yticklabels([SHORTL.get(m,m) for m in ylabels],fontsize=14)
 handles=[Line2D([],[],marker="o",color="w",markerfacecolor=INDIGO,markersize=10,label="Fair, checked by us"),
-         Line2D([],[],marker="D",color="w",markeredgecolor=INDIGO,markerfacecolor="white",markeredgewidth=2,markersize=9,label="The assistant's own number"),
+         Line2D([],[],marker="D",color="w",markeredgecolor=INDIGO,markerfacecolor="white",markeredgewidth=2,markersize=9,label="Assistant's own score, no forecast file to re-check"),
          Line2D([],[],marker="o",color="w",markerfacecolor=CORAL,markersize=10,label="The forecast itself peeked"),
          Line2D([],[],marker="o",color="w",markerfacecolor=GOLD,markersize=10,label="Peeked while choosing or checking"),
          Line2D([],[],marker="o",color="w",markerfacecolor=GREY,markersize=10,label="Audit could not decide")]

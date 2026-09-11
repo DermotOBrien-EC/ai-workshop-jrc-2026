@@ -221,7 +221,7 @@ The recipe did not make the forecasts better. It made them more alike.
 :::
 
 ::: {.notes}
-Say first: the recipe did not make the forecasts better, it made them more alike; and the only scores below 3.9% at 1,673 words are the peeks (coral). Drawn from results.csv and scoring.json at the audited commit by figures/make_experiment_figures.py. At 10 words, every September attempt that delivered scored below May's 10.8%, most by a wide margin. At 46 words, all nine OpenAI attempts on the original request stopped to ask; with the note, all delivered. At 1,673 words, every fair score sits near 5%.
+Say first: the recipe did not make the forecasts better, it made them more alike; and the only scores below 3.9% at 1,673 words are the peeks (coral). If asked what a hollow diamond means: those 17 attempts left code, figures and a metrics file, but no file with the 168 hourly predictions, so we could not re-score the forecast against the true values ourselves; the number shown is the one the assistant wrote in its own metrics file or final message. Twelve are 1,673-word studies whose per-hour forecast was never written out, five are 46-word attempts by the older Claude models that reported a score and a chart but saved no CSV. Their work exists; its score is unverified. Rerunning their code would regenerate the forecast, and the audit deliberately ran nothing new. Drawn from results.csv and scoring.json at the audited commit by figures/make_experiment_figures.py. At 10 words, every September attempt that delivered scored below May's 10.8%, most by a wide margin. At 46 words, all nine OpenAI attempts on the original request stopped to ask; with the note, all delivered. At 1,673 words, every fair score sits near 5%.
 
 The numbers behind the dots.
 
