@@ -1,0 +1,175 @@
+<!-- ==========================================================================
+     EC / JRC deck: asset URLs + per-slide footer bridge
+     ==========================================================================
+     Included via `include-after-body: assets/footer.html` in _quarto.yml.
+
+     1. The <style> block below points the three corner-logo / watermark
+        pseudo-elements at the real image files. It has to live here rather
+        than in ec-jrc.scss because relative url()s inside an inline <style>
+        resolve against the DOCUMENT, whereas the compiled theme CSS sits five
+        directories deep inside `<doc>_files/libs/revealjs/dist/theme/`.
+        (A CSS custom property does NOT solve this: url()s inside one are
+        resolved against the stylesheet that *substitutes* the variable.)
+        ec-jrc.scss owns the selectors, the geometry and everything else; this
+        block only re-states `background-image`.
+        A deck in a sub-directory must re-declare these three rules with its
+        own prefix and `!important` — see _extras/pattern-gallery.qmd.
+
+     2. The <script> bridges Quarto's `{footer="…"}` (stored as a data-footer
+        attribute) to a single fixed `#ec-footer` element, and tags the .reveal
+        element with `data-ec-slide` so the SCSS can hide the furniture on
+        divider / fullbleed / outro slides.
+        In `?print-pdf` mode a single fixed element would show the same text on
+        every page, so there the script instead stamps a per-slide
+        `.ec-slide-footer` div into each section.
+     ========================================================================== -->
+<style>
+  /* positive EC logo — every content slide.
+     `.pdf-page > section` is the ?print-pdf shape: reveal reparents each slide
+     into a <div class="pdf-page">, so the child selectors alone would drop the
+     logo from every page of the PDF. */
+  .reveal .slides > section:not(.stack)::after,
+  .reveal .slides > section > section::after,
+  .reveal .slides .pdf-page > section::after {
+    background-image: url("assets/ec-logo.png");
+  }
+  /* white EC logo — cover, chapter dividers, outro */
+  #title-slide::after,
+  .reveal .slides section.divider::after,
+  .reveal .slides section.outro::after {
+    background-image: url("assets/ec-logo-white.png");
+  }
+  /* faint JRC circle watermark — gradient slides only */
+  #title-slide::before,
+  .reveal .slides section.divider::before,
+  .reveal .slides section.outro::before {
+    background-image: url("assets/jrc-symbol.png");
+  }
+</style>
+
+<script>
+  // Safety net: assets/head.html normalises Pandoc's stray <section> elements
+  // before reveal.js initialises. If that hook did not fire (e.g. the include
+  // was dropped), do it here so the deck is at least structurally sound.
+  if (window.ecNormaliseSections) {
+    try {
+      window.ecNormaliseSections();
+    } catch (e) {}
+  }
+</script>
+
+<script>
+  (function () {
+    "use strict";
+
+    var DEFAULT_FOOTER =
+      "AI in the Research Workflow · European Commission · Joint Research Centre";
+
+    // Slide classes that never carry a footer.
+    var NO_FOOTER = ["divider", "fullbleed", "outro", "quarto-title-block"];
+    // Slide classes the SCSS wants to know about, most specific first.
+    var SLIDE_KINDS = ["fullbleed", "divider", "outro", "statement", "quote-slide"];
+
+    function isPrintView() {
+      return (
+        /print-pdf/gi.test(window.location.search) ||
+        document.documentElement.classList.contains("print-pdf") ||
+        document.documentElement.classList.contains("reveal-print")
+      );
+    }
+
+    function footerTextFor(slide) {
+      if (!slide) return DEFAULT_FOOTER;
+      var v = slide.getAttribute("data-footer");
+      if (v === "false") return ""; // explicit opt-out
+      if (v && v.trim().length) return v; // per-slide citation
+      for (var i = 0; i < NO_FOOTER.length; i++) {
+        if (slide.classList.contains(NO_FOOTER[i])) return "";
+      }
+      return DEFAULT_FOOTER;
+    }
+
+    function kindOf(slide) {
+      if (!slide) return "";
+      if (slide.id === "title-slide" || slide.classList.contains("quarto-title-block"))
+        return "cover";
+      for (var i = 0; i < SLIDE_KINDS.length; i++) {
+        if (slide.classList.contains(SLIDE_KINDS[i])) return SLIDE_KINDS[i];
+      }
+      return "";
+    }
+
+    // ---- screen ---------------------------------------------------------
+    function ensureFooterEl() {
+      var el = document.getElementById("ec-footer");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "ec-footer";
+        var reveal = document.querySelector(".reveal");
+        (reveal || document.body).appendChild(el);
+      }
+      return el;
+    }
+
+    function update(slide) {
+      var el = ensureFooterEl();
+      var txt = footerTextFor(slide);
+      el.innerHTML = txt;
+      el.style.display = txt ? "block" : "none";
+      var reveal = document.querySelector(".reveal");
+      if (reveal) reveal.setAttribute("data-ec-slide", kindOf(slide));
+    }
+
+    // ---- print (?print-pdf): one footer element per slide ---------------
+    function stampPrintFooters() {
+      var slides = document.querySelectorAll(".reveal .slides section");
+      Array.prototype.forEach.call(slides, function (slide) {
+        if (slide.querySelector(":scope > section")) return; // vertical stack
+        if (slide.querySelector(":scope > .ec-slide-footer")) return;
+        var txt = footerTextFor(slide);
+        if (!txt) return;
+        var el = document.createElement("div");
+        el.className = "ec-slide-footer";
+        el.innerHTML = txt;
+        slide.appendChild(el);
+      });
+      var fixed = document.getElementById("ec-footer");
+      if (fixed) fixed.style.display = "none";
+    }
+
+    function init() {
+      if (!window.Reveal) {
+        setTimeout(init, 60);
+        return;
+      }
+      var deck = window.Reveal;
+
+      if (isPrintView()) {
+        // reveal rebuilds the DOM for printing; stamp once it has settled.
+        var stamp = function () {
+          stampPrintFooters();
+          setTimeout(stampPrintFooters, 400);
+        };
+        if (deck.isReady && deck.isReady()) stamp();
+        deck.on("ready", stamp);
+        window.addEventListener("beforeprint", stampPrintFooters);
+        return;
+      }
+
+      var apply = function () {
+        update(deck.getCurrentSlide());
+      };
+      if (deck.isReady && deck.isReady()) apply();
+      deck.on("ready", apply);
+      deck.on("slidechanged", function (ev) {
+        update(ev.currentSlide);
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>
