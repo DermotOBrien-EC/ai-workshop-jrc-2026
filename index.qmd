@@ -480,13 +480,23 @@ Why "score it yourself": of the 83 September sessions, 43 headline scores could 
 Number one is the one that changes how you work. Ask before you plan, even when you already know how you would do it.
 :::
 
+::: {.source}
+Everything shown today, how to set up the tools, and how to try the experiment yourself: [github.com/DermotOBrien-EC/ai-workshop-jrc-2026](https://github.com/DermotOBrien-EC/ai-workshop-jrc-2026)
+:::
+
 ::: {.notes}
-All three are things a researcher does anyway; the assistant is added at the point where a second opinion is cheapest. Number one is the experiment's lesson applied: the assistant will ask for the things you had not thought to state, exactly where the May instructions went wrong. Number two works best with the PDFs attached and a request for page references, so every claim it makes can be checked. Number three: it will not know your field's conventions unless told, so name the journal or the audience. For anything that is not yet public, use the approved internal service; the written walkthrough that goes out after the talk gives the exact steps.
+All three are things a researcher does anyway; the assistant is added at the point where a second opinion is cheapest. Number one is the experiment's lesson applied: the assistant will ask for the things you had not thought to state, exactly where the May instructions went wrong. Number two works best with the PDFs attached and a request for page references, so every claim it makes can be checked. Number three: it will not know your field's conventions unless told, so name the journal or the audience. For anything that is not yet public, use the approved internal service. Point at the link: the public repository holds these slides, every number and where it comes from, the exact requests, a step-by-step guide to setting up Claude Code (for Anthropic's Fable) or the Codex command line (for OpenAI's Astra) on your own computer, and how to run the forecasting experiment and score it yourself; it uses public data.
 :::
 
 # Ask, then check {.outro #close}
 
 The skill is no longer writing perfect instructions. It is asking good questions and judging the answers.
+
+![](figures/qr-public-repo.png){width="150" .nostretch}
+
+Slides, records and setup instructions:
+
+[github.com/DermotOBrien-EC/ai-workshop-jrc-2026](https://github.com/DermotOBrien-EC/ai-workshop-jrc-2026)
 
 ::: {.copyright}
 © European Union 2026. Unless otherwise noted, reuse is authorised under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Third-party elements retain their respective rights.
@@ -705,6 +715,7 @@ The proposed brief, in full: "Forecast the 168 hours starting 2020-01-01 00:00 U
 ::: {.smaller}
 | Source | What it holds |
 |---|---|
+| [Workshop repository](https://github.com/DermotOBrien-EC/ai-workshop-jrc-2026) | These slides, the numbers behind them, setup instructions for the tools, and how to run the experiment yourself |
 | [Experiment repository](https://github.com/DermotOBrien-EC/LLM_coding_practical_example_JRC_LEGENT_presentation_15_05_26) | The exact requests, the data files and their checksums, the code and the records of every attempt |
 | [OpenAI model guidance](https://developers.openai.com/api/docs/guides/latest-model) | How Astra behaves and how to instruct it |
 | [Fable 5.1 prompting guide](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1) | What changed in its behaviour, and checks to run when moving to it |
@@ -714,5 +725,5 @@ The proposed brief, in full: "Forecast the 168 hours starting 2020-01-01 00:00 U
 Evidence snapshot: **6 September 2026** (WORKSHOP_REVIEW.md records the limitations and where each source is). The charts and the second-AI marks were added on 10 September from the same records.
 
 ::: {.notes}
-Every number on the main slides traces to results.csv and scoring.json at commit b352093 of the experiment repository; WORKSHOP_REVIEW.md on the deck's branch records the audit. The second-AI marks (three backup slides) are recorded in research/ai-review-2026-09-10.md, made on 10 September, not audited.
+Every number on the main slides traces to results.csv and scoring.json at commit b352093 of the experiment repository; WORKSHOP_REVIEW.md on the deck's branch records the audit. The second-AI marks (one slide in the main route) are recorded in research/ai-review-2026-09-10.md, made on 10 September, not checked by us.
 :::

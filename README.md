@@ -13,6 +13,7 @@ a similar experiment yourself.
 | Slides as a PDF (43 pages) | [output/workshop-2026-09-11.pdf](output/workshop-2026-09-11.pdf) |
 | Every attempt, every file | The [experiment repository](https://github.com/DermotOBrien-EC/LLM_coding_practical_example_JRC_LEGENT_presentation_15_05_26), read at commit `b352093` |
 | The audit behind the numbers | [WORKSHOP_REVIEW.md](WORKSHOP_REVIEW.md) |
+| Set up the tools and try it yourself | [Get the tools running](#get-the-tools-running-on-your-own-computer), then [Try a similar experiment](#try-a-similar-experiment-yourself) |
 
 The deck has 43 slides: 28 in the main route, written as a 30-to-40-minute
 talk for scientists and civil servants, many of whom had never used an AI
@@ -201,6 +202,32 @@ installed and fall back to matplotlib's default with a warning when it is not.
 | `may-l3-winner.png` | The May winner's own chart, made with the peek. A byte-identical copy of `runs/L3/figures/05_winner_with_intervals.png`; not drawn by the scripts. | The May winner's chart was made with the peek (backup) |
 | `exp-every-attempt.png`, `exp-attempts-*.png`, `exp-report-card*.png` | Companion charts from the same records: the dot chart in other layouts, and a report card of eight audit checks per model and request length. | Not on the slides |
 
+## Get the tools running on your own computer
+
+The experiment used AI assistants that run in a terminal window, read the
+files in a folder, write code and run it. Two of them are easy to install. The
+commands below were correct in September 2026; the two documentation pages
+carry the current versions if they change.
+
+| | Claude Code (Anthropic; runs Claude Fable 5.1) | Codex (OpenAI; runs GPT-6-Astra) |
+|---|---|---|
+| Documentation | https://code.claude.com/docs | https://developers.openai.com/codex |
+| Needs | Node.js 18 or newer, then `npm install -g @anthropic-ai/claude-code` | Node.js 18 or newer, then `npm install -g @openai/codex` |
+| Sign in | Run `claude` once; it opens a browser to sign in with a Claude account (a Pro or Max subscription) or lets you paste an API key that has credit | Run `codex` once; sign in with a ChatGPT account (Plus, Pro, Team or Enterprise) or paste an API key |
+| Pick the model | Type `/model` inside the session and choose Fable 5.1 | Type `/model` inside the session and choose GPT-6-Astra, or start it with `codex -m gpt-6-astra` |
+| Cost | Included in the subscription up to its limits; a ten-word attempt like the ones here is a few cents on an API key, a long one a few euros | The same |
+
+Then, step by step:
+
+1. Make a new, empty folder and put the data file in it (section 1 below).
+2. Open a terminal in that folder (on a Mac: open Terminal, type `cd ` and drag the folder onto the window, press Enter).
+3. Type `claude` or `codex` and press Enter. The first time, follow the sign-in it opens.
+4. Paste one of the requests from section 2 as your first message. If you want the assistant to work without you, add the unattended paragraph from section 3; otherwise stay and answer its questions.
+5. Both tools ask before running a command or writing a file. Say yes as they come, or start with the setting that pre-approves them (`claude --permission-mode auto`, or Codex's approval setting in its documentation) once you trust what they do in that folder.
+6. Keep everything the assistant leaves behind and score it yourself (section 5).
+
+Two cautions. Whatever is in the folder can be sent to the company running the model, so use public data, as this experiment did, or the tools your organisation has approved for anything else; at the Commission that means the internal services named in the staff guidance. And the OpenAI attempts in this experiment did not use Codex itself: they ran through Claude Code and a local gateway, which is one reason the results are not a vendor ranking. If you use Codex directly you are running a cleaner comparison than we did.
+
 ## Try a similar experiment yourself
 
 Everything below is what the September experiment did, reduced to the steps a
@@ -289,7 +316,7 @@ OpenAI's models were reached through the same tool and a local gateway, a
 small program on the same computer that passed the tool's requests on to
 OpenAI's models; that is not OpenAI's own tool, and it is one reason the
 results are not a vendor ranking. Any assistant that can run code will do for
-your own trial.
+your own trial; the section above says how to install the two used here.
 
 - Put the data file alone in a fresh folder. If the request comes with
   standing instructions, save them there under the file name your tool expects;
