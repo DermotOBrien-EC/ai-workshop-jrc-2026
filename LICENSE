@@ -1,0 +1,22 @@
+© European Union 2026
+
+Unless otherwise noted, reuse of this presentation and of the material in this
+repository is authorised under the Creative Commons Attribution 4.0
+International licence (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+
+Third-party elements retain their respective rights. For any use or
+reproduction of elements that are not owned by the European Union, permission
+may need to be sought directly from the respective right holders.
+
+The European Commission and Joint Research Centre logos (assets/ec-logo.png,
+assets/ec-logo-white.png, assets/jrc-symbol.png) and the slide theme
+(ec-jrc.scss, assets/head.html, assets/footer.html) are reproduced from the
+workshop's slide template and remain the European Union's.
+
+The run records under data/ are the presenter's own work, copied from the
+experiment repository https://github.com/DermotOBrien-EC/LLM_coding_practical_example_JRC_LEGENT_presentation_15_05_26
+at commit b352093193ad927de2d6626e07c4341157f4825d, and are covered by the
+notice above. The electricity-load data the experiment used comes from Open
+Power System Data (time series package), which derives it from the ENTSO-E
+Transparency Platform; that data is not included here and carries its own
+terms.

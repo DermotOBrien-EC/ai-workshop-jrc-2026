@@ -1,0 +1,13 @@
+# Rendered output (regenerate with scripts/build.sh; the published copy lives in docs/)
+/.quarto/
+/index_files/
+/index.html
+/_site/
+/_freeze/
+
+# Local tool state
+.claude/
+__pycache__/
+.DS_Store
+
+**/*.quarto_ipynb

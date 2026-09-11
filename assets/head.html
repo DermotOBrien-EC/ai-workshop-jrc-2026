@@ -1,0 +1,90 @@
+<!-- ==========================================================================
+     EC / JRC deck: DOM normalisation, installed from <head>
+     ==========================================================================
+     Why this file exists
+     --------------------
+     Pandoc turns any fenced div whose FIRST block is a heading into a
+     <section>:
+
+         ::: {.tipcard}          =>   <section class="tipcard">
+         #### TIP 3                     <h4>TIP 3</h4>
+         …                              …
+         :::                          </section>
+
+     reveal.js then treats every such element as a *vertical slide*. It counts
+     them in the slide total, and — much worse — `updateSlidesVisibility()`
+     puts `display: none` on everything past the view distance, which silently
+     blanks real slides further down the deck. Symptom: only the first two
+     `.tipcard`s render and the slide after them comes up empty.
+
+     So every <section> that is not a real slide (not `.slides > section` and
+     not `.slides > section > section`) is rewritten to a <div>, keeping its
+     id, classes, attributes and children. Nothing visible changes and
+     ec-jrc.scss styles by class, so it is indifferent to the element name.
+
+     Why it hooks the global instead of just running
+     -----------------------------------------------
+     It has to happen after the slide markup is parsed but before
+     `Reveal.initialize()` lays the deck out. Quarto emits the reveal.js
+     <script> and the `Reveal.initialize({…})` call *after* the slides but
+     *before* `include-after-body`, so a script in assets/footer.html is too
+     late. reveal.js's UMD wrapper assigns `globalThis.Reveal = …`, so a
+     property setter on `window.Reveal` fires at exactly the right moment:
+     slides parsed, initialize not yet called.
+
+     Wired up by `include-in-header:` in _quarto.yml.
+     ========================================================================== -->
+<script>
+  (function () {
+    "use strict";
+
+    function normaliseSections() {
+      var slidesEl = document.querySelector(".reveal > .slides");
+      if (!slidesEl) return;
+      var all = slidesEl.querySelectorAll("section");
+      for (var i = 0; i < all.length; i++) {
+        var el = all[i];
+        var p = el.parentElement;
+        // a genuine horizontal slide, or a genuine vertical sub-slide
+        if (p === slidesEl) continue;
+        if (p && p.tagName === "SECTION" && p.parentElement === slidesEl) continue;
+        var div = document.createElement("div");
+        for (var a = 0; a < el.attributes.length; a++) {
+          div.setAttribute(el.attributes[a].name, el.attributes[a].value);
+        }
+        while (el.firstChild) div.appendChild(el.firstChild);
+        el.parentNode.replaceChild(div, el);
+      }
+    }
+    window.ecNormaliseSections = normaliseSections;
+
+    var stored;
+    try {
+      Object.defineProperty(window, "Reveal", {
+        configurable: true,
+        enumerable: true,
+        get: function () {
+          return stored;
+        },
+        set: function (value) {
+          try {
+            normaliseSections();
+          } catch (e) {
+            /* never block the deck from loading */
+          }
+          // hand the global back to a plain data property
+          delete window.Reveal;
+          window.Reveal = value;
+          stored = value;
+        },
+      });
+    } catch (e) {
+      // Defining the property failed; fall back to a late pass. The deck will
+      // still be correct after reveal has finished initialising.
+      document.addEventListener("DOMContentLoaded", function () {
+        normaliseSections();
+        if (window.Reveal && window.Reveal.sync) window.Reveal.sync();
+      });
+    }
+  })();
+</script>

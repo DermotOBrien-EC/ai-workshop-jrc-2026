@@ -1,0 +1,718 @@
+---
+title: "AI in the Research Workflow"
+subtitle: "What I got wrong in May, and how I work with AI now"
+author: "Andres L. Marin · Dermot O'Brien · Ilyas Tiouassiouine"
+date: "2026-09-11"
+date-format: "DD/MM/YYYY"
+title-slide-attributes:
+  data-notes: "Evidence and public documentation checked on 6 September 2026. Main route rewritten on 10 September 2026 for a 30-minute talk to a mixed audience of scientists and civil servants; every number is unchanged and the full evidence is in the backup slides."
+---
+
+## What I learned since May {#hook footer="false"}
+
+- In May: the longer my instructions, the more accurate the forecast seemed
+- In September I ran the same task again with the newest AI models
+- There had been a data leak: the model had found a way to cheat, and I did not notice at the time
+- A ten-word request now did real work
+
+::: {.takeaway}
+That is what today is about: how to work with an AI assistant, and how to check its work.
+:::
+
+::: {.notes}
+Open gently: "The May result looked fine, and it taught me a lesson I no longer believe." The leak is explained on slide 10 in plain words; here only name it. The May demonstration is in git history and the May figures are in the backup slides. Everything numerical in this talk is a case study of one dataset and one forecast week, audited on 6 September (see WORKSHOP_REVIEW.md). Sources: runs_2026_09/RESULTS.md sections 2, 4, 8–10 and scoring.json in the experiment repository.
+:::
+
+## Three things you will leave with {#promise}
+
+::: {.roomy}
+1. **What these tools actually are**, in plain words
+2. **One experiment**: what happened when I gave the AI more, and then fewer, instructions
+3. **Three things you can try this week**, whether or not you have ever used AI
+:::
+
+::: {.notes}
+Say: "I have already done all the practical steps. You will get them written down afterwards, so you do not need to take notes today. Just watch and decide whether it is worth your time." The technical people get one spoken sentence per example slide and the backup slides, which hold the full evidence.
+:::
+
+# 1. What these tools are {.divider #part-tools}
+
+**Question:** What is actually sitting behind the chat window?
+
+## Think of it as a well-read new colleague {#colleague}
+
+- It has read more than any of us, and it answers in seconds
+- It sounds confident, and sometimes it is confidently wrong
+- It knows nothing about your project until you tell it
+
+::: {.takeaway}
+You would not send its first draft to a Director-General unchecked. Nor would you hire it only to fix typos.
+:::
+
+::: {.notes}
+This analogy carries the whole talk, so land it. "Imagine a new colleague who has read most of the internet, every textbook and most of the published science. Brilliant. But they started this morning, they do not know your project, and when they are unsure they do not always say so." For the technical people, one sentence: "Underneath, a language model predicts text; the useful behaviour comes from that model working inside software that gives it your files, tools and the ability to run code."
+:::
+
+## You will meet it in three forms {#forms}
+
+- **Chat**: you ask, it answers. The form most people have tried
+- **Built into tools you already use**: Word, Outlook, Teams, your browser
+- **Assistants that do multi-step work**: read your files, run the analysis, write the report, while you watch
+
+::: {.takeaway}
+Today's experiment used the third kind.
+:::
+
+::: {.notes}
+One line for the technical people: "In my case that is a tool called Claude Code running on my own computer. It reads and writes my project files, runs my code, and asks me before doing anything risky. The same task was also given to OpenAI's models through the same tool." Vendor names identify configurations in the run records, not recommendations.
+:::
+
+## What sits around the model: the harness {#harness-main}
+
+| Part | What it does in a research task |
+|---|---|
+| The model | Reads your request and proposes what to do |
+| Your request and standing instructions | Say what you want, the limits, and what to hand back |
+| The harness | Runs the loop: lets the model use tools, keeps track of the work, asks you before risky steps |
+| Tools and files | Your data, your documents, the software, the web |
+| Your check | Compares the result with evidence the model did not produce |
+
+::: {.takeaway}
+The harness changed a great deal between May and September. The same model behaves differently inside a better one.
+:::
+
+::: {.notes}
+"Harness" is the software around the model: in my case Claude Code, which runs the model-and-tools loop, manages what the model can see, and pauses for permission. Nobody else in the programme defines it, so this is the one place. Source: the 6 September deck's harness slide (Anthropic, managed agents architecture). The May-to-September changes in this experiment included the Claude Code build (2.1.259 headless in September), interactive versus unattended mode, the workspace and user configuration, and replication; the experiment did not measure the harness's separate contribution, which is why the takeaway says "behaves differently", not "is better by X".
+:::
+
+# 2. One experiment, and what it taught me {.divider #part-experiment}
+
+**Question:** Do more detailed instructions still give better work?
+
+## One task, asked three ways {#task}
+
+**The task:** standing at midnight on 1 January 2020, predict Germany's electricity use for every hour of the next seven days.
+
+::: {.roomy}
+- **Short:** 10 words
+- **Medium:** 46 words, asking for a small computer program, a chart and how accurate it was, plus 7 lines of standing instructions
+- **Long:** 1,673 words saying which methods to compare and which inputs to use, plus 113 lines of standing instructions
+:::
+
+::: {.notes}
+In the run records these are L1, L2 and L3, and the standing instructions are a separate file called AGENTS.md that the assistant reads before starting. Exact prompts: prompts/L1.md, L2.md, L3.md in the experiment repository. Data: Open Power System Data / ENTSO-E hourly load, 50,400 hourly rows from January 2015 to September 2020. The file the assistant received also contained the answers for the target week; the assistant was expected not to use them. This was a retrospective exercise. The short prompts leave UTC versus local time implicit, which is why some runs use a week shifted by one hour. The three levels change the instructions, the required outputs and the modelling choices together; they do not isolate prompt length.
+:::
+
+## In May, more detail looked like a better forecast {#may}
+
+**Anthropic's Claude, the May version (Opus 4.7). One attempt per request.**
+
+| Request | Average error | What came back |
+|---|---|---|
+| 10 words | 10.8% | Three simple rules of thumb |
+| 46 words | 5.5% | A proper statistical forecast and a chart |
+| 1,673 words | 3.4% | A six-method study, a range showing how sure it was, a write-up |
+
+::: {.takeaway}
+The lesson I drew: write more, get more. One of these numbers is not what it seems.
+:::
+
+::: {.notes}
+"Average error" is MAPE, the mean absolute percentage error: on average, how far off the forecast was as a percentage of the true value. Lower is better. Give the room a reference point: 10.8% is what a rule of thumb gets (same hour, a year earlier), so anything around 3 to 5% is the territory of a real forecasting model. Full-precision values: 10.76, 5.52 and 3.43 percent, from runs/L1/metrics.csv, runs/L2/metrics.csv and runs/L3/metrics.json. The 10.76 is a "same hour, 364 days earlier" rule of thumb, the best of three baselines when compared on the test week itself. The 3.43 is the one that is not what it seems: next slide. Historical numbers do not show that detail caused an accuracy gain.
+:::
+
+## How the winning forecast got its low error {#answers}
+
+- To predict each hour, the method looked at the electricity use exactly 24 hours before
+- For 2 to 7 January those values did not exist yet. A fair forecast uses its own prediction there. May's method used the real numbers
+- So for six of the seven days, the forecast was partly copying the answers. 3.4% was not a real forecast
+
+::: {.takeaway}
+A data analyst knows not to do this. An AI does it unless it knows, or is told, not to.
+:::
+
+::: {.notes}
+Expect the question "if it used the real numbers, why not 0%?" Answer: it never saw the real number for the hour it was predicting; it saw the real number from 24 hours earlier and used it as a clue. Tuesday 3pm is close to Monday 3pm but not identical (weather, a holiday), so the prediction is still off by about 3 to 4%. Done fairly, the method has to use its own prediction for the day before, and small errors pile up over seven days, which is the 5.5% on the next slide. Expect "was it cheating?" Answer: not deliberately; the long instructions asked for the 24-hour clue, the same feature code ran over the test week, and the real values flowed in. The honest words are "data leak" and "it peeked". Source: the May feature builder, runs/L3/code/lightgbm_features.py lines 43–48, 111–112 and 143–144, and RESULTS.md section 4. The 24-hour lag reads observed test-week values in 144 of 168 hours; the rolling averages touch test observations in 167 of 168 hours, from the second forecast hour. A forecast that is updated as real data arrives is a legitimate but different task; it is not a seven-day forecast made on 1 January. Say plainly: the model had no intent, but the effect is the same as cheating; it is an easy mistake to make, and my long instructions helped cause it, because they asked for a 24-hour input without saying what to do for hours that had not happened yet. For the task as set, the result is invalid. Opus 4.7 made the same mistake again in September in two of its three long-instruction runs (the chart slide "One scale for all three request lengths").
+:::
+
+## Telling the AI what not to do {#not-to-do .tight}
+
+- The May instructions were written the way most people write them. Their list of things not to do did not cover this case
+- In my experience, even an assistant told not to cheat sometimes does. Telling it I was watching for exactly that cut it a lot
+- In September, the newer Claude did it the fair way on its own, and labelled the peek as a check
+- The newest OpenAI model stopped and asked before starting. It prefers to ask and talk than to just get on with it
+
+::: {.takeaway}
+Newer models catch more of this themselves. You still say what a valid result is, and you answer when they ask.
+:::
+
+::: {.notes}
+Evidence behind each line. The second bullet is my own experience from separate testing (the ARA work), not a result of this experiment: say so if asked. The May long prompt had a DO NOT section (it forbade using the test window to choose the model class) but nothing about where the forecast had to stand, and it prescribed the 24-hour input (backup slide "Long instructions can contradict themselves without anyone noticing"). Fable 5.1's three long-instruction runs all fed back their own predictions, and run 3 reported the fair number as its result while labelling the peeking number as a diagnostic (next slide). Astra asked the single-origin question in all three of its long-instruction attempts, and OpenAI's own guidance describes Astra pausing when instructions are unclear or conflict (backup slide "An upgrade changes behaviour too"). Keep the claims this narrow: one dataset, one week; not every run of every model was clean, and the fine print is in the backup tables.
+:::
+
+## The same method, with and without the peek {#two-scores}
+
+**Claude Fable 5.1 in September: one forecast, measured twice**
+
+| How it filled in the days that had not happened yet | Average error |
+|---|---|
+| With the real numbers (the peek) | 3.7% |
+| With its own predictions (the fair way) | 5.5% |
+
+::: {.spacer}
+:::
+
+Fable gave the fair 5.5% as its answer and kept the 3.7% only as a check. The May winner gave the peeking number as its answer.
+
+::: {.takeaway}
+The peek is worth almost two points of error. That, not skill, is why May's 3.4% looked so good.
+:::
+
+::: {.notes}
+Source: fable51_L3_r3/output/metrics.json, notes.lightgbm_day_ahead_mode_mape_pct (3.71) and the recursive headline (5.53); output/code/forecast.py lines 357–365. Same fitted LightGBM point model, two ways of feeding it during the week. The agent computed the 3.71 as a labelled diagnostic after its main analysis; the whole-run audit marks that run "leaked" with scope confined to the supplement, and its recursive headline is free of observed test inputs. Fable's three long-instruction runs scored 5.03, 4.99 and 5.53 percent, all recursive: Fable's three long-instruction runs, scored honestly, all came out at about 5 percent. Two questions a sharp listener will raise, answer them out loud: (i) 5.5% is also May's 46-word score, so yes, done honestly, my 1,673-word recipe did no better than 46 words, which is where the next part starts; (ii) 3.7% is worse than May's 3.4%, but with the answer sheet in play both numbers are meaningless, so do not rank them.
+:::
+
+## Ten words in September: a real 3.3% {#ten-words}
+
+*"Forecast first week of January 2020 German hourly electricity load."*
+
+![](figures/exp-rerun-l1-fable.png){.figtop .nostretch height="250"}
+
+::: {.belowtext}
+Claude Fable 5.1, no recipe, no standing instructions. A proper forecast, a range showing how sure it was, and the audit found no answer-sheet use. **Average error 3.3%**, best of three.
+:::
+
+::: {.takeaway}
+With my 1,673-word recipe, the same assistant scored about 5%. The recipe fixed choices it made better on its own.
+:::
+
+::: {.notes}
+Fable 5.1, L1 run 2: LightGBM with calendar and lag features and a p10–p90 band. Recomputed MAPE 3.284% on its stamped local-time week, one hour shifted from the UTC reference. Illustrative run, not an average: the sibling runs scored 3.96 and 4.49 percent, and run 3 is flagged because it adjusted features after seeing the test error. Honesty about the model: the old model also did better in September on the same ten words (Opus 4.7: 3.60, 3.32 flagged, 7.73), so the change is not the new model alone; the tool, the settings and replication changed too. The takeaway compares Fable with itself: three long-instruction runs at 5.03, 4.99 and 5.53 percent against 3.3% here. The recipe prescribed short lags and a recursive method; left alone, the assistant chose longer lags and a direct method, so the comparison is between my choices and its choices, not a clean test of prompt length. What matters for the audience: a ten-word request now produces a real piece of work in this setup. Be fair to the recipe: it still bought more deliverables (validation, uncertainty ranges and a methods document in 3 of 3 long runs against 1, 2 and 0 of 3 short runs; backup slide "The long recipe still bought checks, ranges and write-ups"), and one mistake.
+:::
+
+## Same model as May, new harness, different answer {#same-model-main}
+
+- I gave the May model (Opus 4.7) the same ten words again in September, three times
+- May: **10.8%**. September: **3.6%**, 3.3% and 7.7%
+- Nothing about the model had changed. The harness, its settings and the way I ran it had
+
+::: {.source}
+The 3.3% attempt adjusted its method after seeing the test score, so it does not count as clean.
+:::
+
+::: {.takeaway}
+A model's result depends on the harness around it. Compare models only inside the same harness, and retest after an upgrade.
+:::
+
+::: {.notes}
+Source: results.csv, scoring.json and RESULTS.md 10.1; the May metrics.csv confirms the 364-day naive baseline (10.76%). September Opus 4.7 L1: 3.60, 3.32 (flagged: features adjusted after reading test scores) and 7.73 percent; methods were LightGBM, a multiplicative calendar profile, and a historical average with a fitted trend, so do not call all three a new model class. What changed between May and September: Claude Code build, interactive versus headless mode, workspace, user configuration, replication. The model label was held fixed, not every backend condition or random trajectory, and the experiment does not estimate the harness's causal share. Keep the claim to what the slide says: same model, different setup, different result.
+:::
+
+## One scale for all three request lengths {#all-levels .tight}
+
+![](figures/exp-all-levels.png){.figtop .nostretch height="380"}
+
+::: {.belowtext}
+One dot per attempt. Coral: the forecast peeked. Gold: peeked while choosing.
+:::
+
+::: {.takeaway}
+The recipe did not make the forecasts better. It made them more alike.
+:::
+
+::: {.notes}
+Say first: the recipe did not make the forecasts better, it made them more alike; and the only scores below 3.9% at 1,673 words are the peeks (coral). Drawn from results.csv and scoring.json at the audited commit by figures/make_experiment_figures.py. At 10 words, every September attempt that delivered scored below May's 10.8%, most by a wide margin. At 46 words, all nine OpenAI attempts on the original request stopped to ask; with the note, all delivered. At 1,673 words, every fair score sits near 5%.
+
+The numbers behind the dots.
+
+10 words:
+- Opus 4.7: 3.60, 3.32†, 7.73
+- Opus 4.8: 2.92, 2.80, 4.41
+- Opus 5: 3.07†, no score, 5.35†
+- Fable 5.1: 3.96, 3.28, 4.49†
+- GPT-5.5: 4.20, 4.58‡, 9.48†
+- GPT-5.6-Sol: 3.56‡, 2.41†, 3.45
+- GPT-6-Astra: no score, no score, no score
+- GPT-6-Astra with the note: 2.71, 3.63, 4.47
+
+46 words:
+- Opus 4.7: 3.47\*, 2.87\*, 3.13\*
+- Opus 4.8: 2.68, 3.60\*, 3.57\*
+- Opus 5: 3.40\*†§, 4.14†, 4.80
+- Fable 5.1: 2.30, 5.35§, 3.21
+- GPT-5.5: no score, no score, no score
+- GPT-5.5 with the note: 4.69†, 8.50, 4.13†
+- GPT-5.6-Sol: no score, no score, no score
+- GPT-5.6-Sol with the note: 3.46†, 4.03†, 3.24†
+- GPT-6-Astra: no score, no score, no score
+- GPT-6-Astra with the note: 4.79, 2.80, 5.08
+
+1,673 words:
+- Opus 4.7: 3.24\*†§, 3.52\*†, 4.45\*
+- Opus 4.8: 4.83\*†, 4.61\*, no score
+- Opus 5: 5.46, 5.47\*†, 4.99\*
+- Fable 5.1: 5.03, 4.99, 5.53†
+- GPT-5.5: no score, 3.77\*†, no score
+- GPT-5.5 with the note: 5.46, no score
+- GPT-5.6-Sol: no score, no score, no score
+- GPT-5.6-Sol with the note: 5.31\*, 5.11\*, 5.28\*§
+- GPT-6-Astra: no score, no score, no score
+- GPT-6-Astra with the note: 3.96, 3.91†, 5.12
+
+Marks: \* the assistant's own number; † the audit found a peek (its scope varies by attempt); ‡ the audit could not decide; § the attempt ended early. Scores are in attempt order, from results.csv and scoring.json.
+:::
+
+## It asked the question that exposes the May mistake {#asked .tight}
+
+OpenAI's newest assistant, GPT-6-Astra, read the long instructions and asked, in short:
+
+::: {.callout-box}
+"Do you want one forecast for all 168 hours, made on 1 January, or should I update my inputs as the real numbers arrive?"
+:::
+
+That is the exact ambiguity behind the May mistake. Across OpenAI's three models, **20 of 27** attempts stopped to ask or to propose a plan instead of forecasting. Anthropic's Claude asked in 0 of 12 and got on with the work.
+
+::: {.takeaway}
+A question from the AI is not a weakness. It can be the most valuable thing it produces.
+:::
+
+::: {.notes}
+The quotation is a plain-English paraphrase of the question in astra_L3_r1–r3/final_message.md: predict all 168 hours from a single origin, or update lag features as actual observations arrive. RESULTS.md section 8. Setup caveats for the technical people: these OpenAI runs went through Claude Code and a local gateway, not native Codex, with different effort defaults; the original Claude arm had 0 of 12 clarification stops, though two of those twelve ended before their final step. Clarification is not evidence of lower capability, and this is not a vendor ranking. The point for the room: the question exposed a choice that should be settled before any analysis, rather than inferred from whichever choice gives the better score.
+:::
+
+## How often the OpenAI models stopped to ask {#stopped .tight}
+
+![](figures/exp-stopped.png){.figtop .nostretch height="380"}
+
+::: {.belowtext}
+Different route and settings, not OpenAI's own tool. Original Claude group: 0 of 12 stopped.
+:::
+
+::: {.takeaway}
+With the note, none stopped. Who decides had to be said out loud.
+:::
+
+::: {.notes}
+Per model on the original request: Astra 9 of 9 stopped, Sol 6 of 9, GPT-5.5 5 of 9 (20 of 27). Source: scoring.json, tags astra, sol and gpt55. An attempt can end successfully after asking a question without delivering the task. The result reflects the model, the route (a local gateway) and the default effort settings together; it is not a result for OpenAI's own Codex tool. Zero stops to ask does not mean every Claude attempt finished: two of the original twelve ended before their final step.
+:::
+
+## One paragraph, and a different outcome {#paragraph .tight}
+
+No one could answer, so I re-ran the 20 stopped attempts with this note:
+
+::: {.callout-box}
+"Note from the operator: this session is unattended. Nobody can answer a question or approve a plan, so do not stop to ask or to propose. Make the most reasonable choice for anything unclear, say what you assumed in your final message, and finish the whole job in this session."
+:::
+
+**0 of 20** stopped. **19 of 20** produced a score, 16 of them checked by me. GPT-6-Astra's three ten-word attempts: errors 2.7% to 4.5%, each tested on past years first and written up.
+
+::: {.takeaway}
+If someone can answer, let it ask. If nobody can, tell it to decide, and to write down what it assumed.
+:::
+
+::: {.notes}
+Exact text: prompts/one_shot_suffix.md. Say that "the operator" in the note is you. Arm B reran only the 20 stopped cells, in fresh sessions, with no unchanged-prompt retry control and no Claude-with-note arm, so this is an observed association, not an isolated causal effect. Of the 19 scores, 16 were recomputed from saved forecasts and 3 are agent-reported; two sessions ended early, one with a reported score. Astra with the note at ten words: 2.71, 3.63 and 4.47 percent; validation informed a choice in 3 of 3; written methods in 3 of 3; intervals in 2 of 3; the audit notes record that none of the three agents scored the target week themselves, the evaluator did that afterwards. The paragraph is an experimental intervention, not blanket permission for consequential actions. If asked whether a plain retry without the note would have delivered anyway: there was no such control run, so I cannot say. If asked whether 2.7% means OpenAI's assistant is now the better tool: no; different routes, different settings, one week of data; the review record forbids a vendor ranking and so do I. The twentieth attempt ended early without a score.
+:::
+
+## What each request length bought in good practice {#checks-stacked .tight}
+
+![](figures/exp-checks-stacked.png){.figtop .nostretch height="380"}
+
+::: {.belowtext}
+Bar length: good practices shown, out of five, averaged over that model's attempts.
+:::
+
+::: {.takeaway}
+Longer instructions bought more good practice. The note bought the most.
+:::
+
+::: {.notes}
+Say first: the long request bought more good practice from almost every model (the bars lengthen left to right), and with the note GPT-6-Astra shows the most at every length; the one practice nobody managed at 1,673 words is choosing the method without looking at the test score, because the instructions asked for the winner by test-week error. The five practices, from the 6 September audit's per-attempt fields: the forecast itself did not peek; the method was chosen without the test score (the audit's final_scoring_only label); a test on past data guided a choice; a range was given; the methods were written up. Three further audit fields (delivered a score, checked by us, finished without interruption) are on the dot chart and the harness slide. "Nothing delivered" means every attempt at that length stopped or produced no forecast; "not run at this length" means the with-the-note re-run only covered attempts that had stopped.
+
+The counts behind the bars (passed / attempts):
+- 10 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 2/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 1/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 2/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 3/3
+- 10 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 1/3; Gave a range 2/3; Wrote up its methods 0/3
+- 10 words, GPT-5.5 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 1/3; Tested on past data first 1/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 1/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 3/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 3/3
+- 46 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 2/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 1/3
+- 46 words, GPT-5.5 (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-5.5, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 2/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-5.6-Sol, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 3/3
+- 1,673 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 1/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 1,673 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 2/3; Chose the method without the test score 1/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 2/3
+- 1,673 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 1,673 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 1,673 words, GPT-5.5 (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 1/3; Gave a range 1/3; Wrote up its methods 1/3
+- 1,673 words, GPT-5.5, with the note (2 attempts): Forecast itself did not peek 1/2; Chose the method without the test score 0/2; Tested on past data first 1/2; Gave a range 1/2; Wrote up its methods 1/2
+- 1,673 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 1,673 words, GPT-5.6-Sol, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 1,673 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 1,673 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+:::
+
+## I asked a second AI to mark all 62 pieces of work {#review-stacked .tight}
+
+![](figures/exp-review-stacked.png){.figtop .nostretch height="380"}
+
+::: {.belowtext}
+Five points, 0 reject to 1 accept, averaged over attempts. Not checked by us.
+:::
+
+::: {.takeaway}
+A fast first check, not the last word. It found the peeks the audit found.
+:::
+
+::: {.notes}
+Say first: at 1,673 words Fable 5.1 gets full marks on all five points, and GPT-6-Astra with the note is at or near the top at every length; the May model scores lowest at every length, mostly on method and honest reporting. Method: on 10 September one Claude Opus 5 reviewer per attempt read the saved code, forecast file, final message and summary (grepping the transcript only for specific questions) and marked five points 1 (reject), 2 (reservations) or 3 (accept) with a line of evidence per mark: code quality; sound method (sensible model, time-ordered validation, horizon handled from one origin); honest reporting (does the final message match the code); good decisions (choices justified, ambiguity handled); complete deliverables. 62 attempts were reviewed: the 60 with a score plus two with forecast work but no final score. This is a second AI's reading, made after the audit and not checked by us; every mark and its evidence is in research/ai-review-2026-09-10.md. Cross-check: the reviewers found the same three attempts whose delivered forecast peeked as the audit did, and one more (an Opus 5 ten-word attempt that used the target week's actual temperature as an input, which the audit recorded as an external input); on the looser question of peeking while choosing they were more lenient than the audit, so the audit stays the authority on the peek. Pointed findings worth having ready: two GPT-5.5 ten-word attempts reported the true test score as if it were a validation score, and one first wrote the target week's actual values out as its forecast before correcting itself; a Sol attempt chose which ensemble to ship with the answer visible; an Opus 5 attempt delivered nothing and gave a fabricated reason for stopping; the reviewers describe the May model's two peeking 1,673-word attempts as "effectively a one-step-ahead model placed in the same table as five true week-ahead forecasts".
+
+The marks behind the bars (mean, 1 to 3):
+- 10 words, Claude Opus 4.7 (May model) (3 attempts): Code quality 2.0; Sound method 1.7; Honest reporting 2.3; Good decisions 2.0; Complete deliverables 1.7
+- 10 words, Claude Opus 4.8 (3 attempts): Code quality 2.7; Sound method 2.3; Honest reporting 2.7; Good decisions 2.7; Complete deliverables 2.0
+- 10 words, Claude Opus 5 (3 attempts): Code quality 2.7; Sound method 2.7; Honest reporting 2.0; Good decisions 2.7; Complete deliverables 2.3
+- 10 words, Claude Fable 5.1 (3 attempts): Code quality 3.0; Sound method 3.0; Honest reporting 3.0; Good decisions 2.7; Complete deliverables 2.3
+- 10 words, GPT-5.5 (3 attempts): Code quality 2.0; Sound method 2.0; Honest reporting 2.0; Good decisions 2.0; Complete deliverables 1.3
+- 10 words, GPT-5.6-Sol (3 attempts): Code quality 2.0; Sound method 3.0; Honest reporting 1.7; Good decisions 2.0; Complete deliverables 1.3
+- 10 words, GPT-6-Astra, with the note (3 attempts): Code quality 3.0; Sound method 3.0; Honest reporting 3.0; Good decisions 3.0; Complete deliverables 2.3
+- 46 words, Claude Opus 4.7 (May model) (3 attempts): Code quality 3.0; Sound method 2.0; Honest reporting 2.0; Good decisions 2.0; Complete deliverables 1.3
+- 46 words, Claude Opus 4.8 (3 attempts): Code quality 3.0; Sound method 2.0; Honest reporting 2.3; Good decisions 2.0; Complete deliverables 1.7
+- 46 words, Claude Opus 5 (3 attempts): Code quality 3.0; Sound method 3.0; Honest reporting 2.0; Good decisions 2.7; Complete deliverables 2.3
+- 46 words, Claude Fable 5.1 (3 attempts): Code quality 3.0; Sound method 3.0; Honest reporting 2.3; Good decisions 2.7; Complete deliverables 2.7
+- 46 words, GPT-5.5, with the note (3 attempts): Code quality 2.7; Sound method 2.3; Honest reporting 2.0; Good decisions 2.0; Complete deliverables 2.0
+- 46 words, GPT-5.6-Sol, with the note (3 attempts): Code quality 3.0; Sound method 2.7; Honest reporting 2.3; Good decisions 2.7; Complete deliverables 2.3
+- 46 words, GPT-6-Astra, with the note (3 attempts): Code quality 3.0; Sound method 3.0; Honest reporting 3.0; Good decisions 3.0; Complete deliverables 3.0
+- 1,673 words, Claude Opus 4.7 (May model) (3 attempts): Code quality 2.3; Sound method 1.7; Honest reporting 1.7; Good decisions 2.3; Complete deliverables 2.0
+- 1,673 words, Claude Opus 4.8 (3 attempts): Code quality 2.7; Sound method 3.0; Honest reporting 2.0; Good decisions 2.7; Complete deliverables 1.7
+- 1,673 words, Claude Opus 5 (3 attempts): Code quality 3.0; Sound method 3.0; Honest reporting 2.7; Good decisions 3.0; Complete deliverables 2.3
+- 1,673 words, Claude Fable 5.1 (3 attempts): Code quality 3.0; Sound method 3.0; Honest reporting 3.0; Good decisions 3.0; Complete deliverables 3.0
+- 1,673 words, GPT-5.5 (1 attempts): Code quality 3.0; Sound method 1.0; Honest reporting 2.0; Good decisions 2.0; Complete deliverables 2.0
+- 1,673 words, GPT-5.5, with the note (1 attempts): Code quality 3.0; Sound method 2.0; Honest reporting 2.0; Good decisions 2.0; Complete deliverables 3.0
+- 1,673 words, GPT-5.6-Sol, with the note (3 attempts): Code quality 3.0; Sound method 3.0; Honest reporting 2.7; Good decisions 3.0; Complete deliverables 2.0
+- 1,673 words, GPT-6-Astra, with the note (3 attempts): Code quality 3.0; Sound method 2.7; Honest reporting 3.0; Good decisions 2.7; Complete deliverables 3.0
+:::
+
+# 3. How I work with AI now {.divider #part-now}
+
+**Question:** What should you do differently tomorrow?
+
+## How I used to work with it: a detailed recipe {#before}
+
+- Until this year, I got the best results by spelling out every step: which methods, which inputs, what to produce
+- The assistant followed the recipe. Where the recipe was silent, it filled the gap itself, sometimes with a shortcut that made the score look better
+- In May, the recipe did not say what to do about days that had not happened yet. So the assistant did not know either
+
+::: {.takeaway}
+Spelling out every step was the right approach for the older models. With today's models, asking what they would do is often the better start.
+:::
+
+::: {.notes}
+Keep the tone kind: this was the right way to work with the older models, and most of the room still works this way. [Your own example: how long you used to spend writing the perfect instruction.] The point is not that the recipe was bad; it is that a recipe can only contain what its author already knows. The long L3 prompt prescribed the short-lag feature list and also asked for a winner chosen on the test week while forbidding test-week selection elsewhere: the assistant inherited a contradiction I wrote (backup slide "Long instructions can contradict themselves without anyone noticing").
+:::
+
+## How I work with it now: describe the goal, ask, discuss, decide {#now}
+
+**My experience since the newest models arrived:**
+
+- I say what I want to achieve, and what would make the result valid
+- I ask how it would approach it, and what it needs to know from me
+- It often suggests something I had not considered. Sometimes a better plan
+- I choose. It does the work. I check
+
+::: {.takeaway}
+The skill moved from writing instructions to asking good questions and judging the answers.
+:::
+
+::: {.notes}
+Personal experience, labelled as such; the experiment did not measure conversational tone or intent recognition. "The newest models, Claude Fable from Anthropic and GPT Astra from OpenAI, are good enough that their suggestions are often better than my plan. So now I ask, even when I already know how I would do it. Three things can happen: it agrees with me, a cheap confirmation; it suggests something I had not considered, a win; or it proposes something worse, and I have learned what to watch for. All three are useful." If asked about the difference between vendors: in my experience Fable infers my intent more easily and with Astra I state the boundary more explicitly; that is an observation, not a measurement.
+:::
+
+## Seven questions worth asking every time {#questions .tight}
+
+1. "Before you start, what questions do you have for me?"
+2. "What are three ways to approach this? Which would you choose, and why?"
+3. "What could go wrong with this plan?"
+4. "Is there a simpler way?"
+5. "What am I missing?"
+6. "What would an expert in this field say about this?"
+7. "Check your own work: what did you assume?"
+
+::: {.takeaway}
+In my experience, question 1 alone changes your results: it asks for the things you forgot to say.
+:::
+
+::: {.notes}
+"Print these and stick them next to your screen. Question one alone will change your results: the assistant asks for the things you forgot to tell it. Astra did that unprompted." Bonus tip: for anything important, ask a second, different AI the same question and compare; two colleagues disagree more usefully than one.
+:::
+
+## You are still responsible for the result {#check}
+
+- Check the result yourself. Do not take its word for how good it is
+- Ask what it assumed, and what it changed after seeing results
+- Keep the exact request and data, so someone else can redo it
+- A confident tone is not evidence
+
+::: {.takeaway}
+Its report is a claim. Check it the way you would check a colleague's first draft.
+:::
+
+::: {.notes}
+Why "score it yourself": of the 83 September sessions, 43 headline scores could be recomputed from saved forecasts, 17 exist only as the assistant's own reported number with no scorable file, and 23 have no score at all. A final script can have a clean training split even if the assistant used test results while selecting it (examples: Fable L1 r3, Sol Extension B L2 r2/r3). Useful evidence: the exact data and instructions, timestamped predictions with independently calculated errors, the choices made during the session, and failures, retries and changes after looking at results.
+:::
+
+## Three things to try on your next piece of research {#try}
+
+::: {.roomy}
+1. **Before you plan a new study**, describe the question and ask: "How would you approach this, what data would you need, and what could go wrong?"
+2. **Give it the papers you have to read anyway**: "Summarise each one, then tell me where they disagree and what you would question."
+3. **Give it a draft section of your paper**: "Where is the argument weakest, and which claims need a source or a check?"
+:::
+
+::: {.takeaway}
+Number one is the one that changes how you work. Ask before you plan, even when you already know how you would do it.
+:::
+
+::: {.notes}
+All three are things a researcher does anyway; the assistant is added at the point where a second opinion is cheapest. Number one is the experiment's lesson applied: the assistant will ask for the things you had not thought to state, exactly where the May instructions went wrong. Number two works best with the PDFs attached and a request for page references, so every claim it makes can be checked. Number three: it will not know your field's conventions unless told, so name the journal or the audience. For anything that is not yet public, use the approved internal service; the written walkthrough that goes out after the talk gives the exact steps.
+:::
+
+# Ask, then check {.outro #close}
+
+The skill is no longer writing perfect instructions. It is asking good questions and judging the answers.
+
+::: {.copyright}
+© European Union 2026. Unless otherwise noted, reuse is authorised under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Third-party elements retain their respective rights.
+:::
+
+::: {.notes}
+Leave this on screen during questions. Discussion prompt if the room is quiet: "Which task will you ask about first?"
+:::
+
+# Backup and evidence {.divider #backup}
+
+The evidence behind the talk, for questions. Not part of the 30-minute route.
+
+## Of the 83 attempts, 43 have a final score checked by us {#evidence-limits}
+
+- **43** final scores were checked by us: recomputed from the saved forecast
+- **17** exist only as the assistant's own number, with no saved forecast we could score
+- **23** have no final score at all
+- Eight saved forecasts cover a week in local time, one hour off the week the others used; each is scored on the week it actually predicted
+
+::: {.takeaway}
+This is a case study describing one forecast week, with few repeats. It cannot say which company's model is better, or prove a general rule for writing instructions.
+:::
+
+::: {.notes}
+"The assistant's own number" means a score the assistant reported itself, with nothing we could recompute (agent-reported in the records). Counts come from the source and alignment columns of results.csv. All 43 saved forecasts were re-scored for this revision. What changed between May and September includes the way the attempts were run (interactive or unattended), the user configuration and the version of the software around the model (the harness). Within September, keep-alive settings, the rules for resuming an interrupted attempt, the hardware and the number of jobs running at the same time also differ. The OpenAI attempts went through a different route (a local gateway), which adds differences in translation and in effort settings. No new model attempts were launched for this review.
+:::
+
+## 83 attempts in four groups; the 20 re-runs were the ones that stopped {#rerun-design}
+
+**83 attempts, run on 3–6 September. May's three are separate.**
+
+| Group | What ran | Attempts |
+|---|---|---|
+| Original rerun | Claude Fable 5.1, three attempts at each of the three requests. Claude Opus 5, one at each | 12 |
+| A | OpenAI's three models (Astra, Sol, GPT-5.5), through a different route: not OpenAI's own tool | 27 |
+| B | The 20 attempts from group A that had stopped, re-run with the note that the attempt was unattended and nobody could answer | 20 |
+| C | More attempts with the May model (Opus 4.7), Opus 4.8 and Opus 5 | 24 |
+
+::: {.notes}
+Sources: DESIGN.md sections 2 and 11–13, and the 83 rows of results.csv. Group B was chosen by what happened in group A (only the attempts that had stopped), so it is not a complete new set of conditions crossed with all the others. The original rerun plus group C give three attempts at each request length for each Claude model. The prompts, the data and the standing-instructions file (AGENTS.md) were frozen and their checksums verified. Claude Code version 2.1.259, run unattended (headless). Some attempts were resumed after an interruption and some launches were voided; neither a resume nor a voided launch counts as an extra independent observation.
+:::
+
+## The May winner's chart was made with the peek {#may-l3-backup}
+
+![](figures/may-l3-winner.png){.figtop .nostretch height="380"}
+
+::: {.belowtext}
+**The May output, built with real numbers from the week it was predicting.** Error 3.43%; its 80% and 95% ranges held the true value 79.8% and 92.9% of the time. Because of the peek, none of that says how a fair forecast would do.
+:::
+
+::: {.notes}
+Sources: runs/L3/metrics.json and code/lightgbm_features.py. The image is copied unchanged from runs/L3/figures/05_winner_with_intervals.png: the historical chart, shown here with a visible correction. The May claim that the ranges were about as reliable as intended (the "essentially nominal calibration" claim) is withdrawn.
+:::
+
+## Long instructions can contradict themselves without anyone noticing {#selection-backup .tight}
+
+- The 1,673-word instructions asked for the winner with the lowest error on the test week
+- Elsewhere they said not to use the test week to choose the type of model
+- Fable's three 1,673-word attempts followed the first rule
+- The same method also won on earlier data in all three: no harm done here, but only by luck
+
+::: {.takeaway}
+Choose the method on earlier data, and freeze that choice before the final test.
+:::
+
+::: {.notes}
+Sources: prompts/L3.md and RESULTS.md sections 3–4. Do not assume the validation winner and the test-week winner agree in every other extension of the experiment without checking. The audit also labels comparisons against the baselines as chosen after seeing the test score ("test_selected") even when the headline method had been fixed beforehand. Read each audit label together with its scope.
+:::
+
+## The long recipe did not give Fable the lowest errors {#fable-accuracy .tight}
+
+**Claude Fable 5.1 in September, three attempts at each request**
+
+| Request | Average error, in attempt order | What to note |
+|---|---|---|
+| 10 words | 3.96, 3.28, 4.49% | Attempt 3 is flagged: it changed its inputs after seeing the test score |
+| 46 words | 2.30, 5.35, 3.20% | Attempt 2 ended before its final step |
+| 1,673 words | 5.03, 4.99, 5.53% | All three done the fair way: a week-ahead forecast filled with its own predictions |
+
+::: {.source}
+The 10-word attempts were scored on a week in local time, one hour off the week the other attempts used.
+:::
+
+::: {.takeaway}
+The 1,673-word instructions did not give the lowest errors in this comparison.
+:::
+
+::: {.notes}
+All nine values were recomputed by us from the saved forecasts (results.csv rows fable51_L1_r1 to fable51_L3_r3; the 1,673-word metrics are in each attempt's output/metrics.json). All three 10-word attempts used the same standard method (LightGBM). The 10-word attempts use a CET week shifted one hour from the UTC reference. Rounded to one decimal, the ranges are 3.3 to 4.5, 2.3 to 5.4 and 5.0 to 5.5 percent. The 1,673-word recipe prescribes short lags (a lag is an earlier value used as an input) and the fair, step-by-step method; left alone at 10 words, the assistant chose longer lags and a direct method. Those choices are mixed in with the effect of how detailed the instructions were, so this comparison does not isolate detail. The 1,673-word attempts rank the method types by their average error on the test week, as the recipe asks, even though the recipe's own DO NOT section contradicts that. LightGBM also came out best on the held-back validation data in all three Fable attempts.
+:::
+
+## The long recipe still bought checks, ranges and write-ups {#process}
+
+**Claude Fable 5.1, counts out of three attempts at each request**
+
+| Request | A test on past data guided a choice | Gave a range showing how sure it was | Wrote up its methods |
+|---|---|---|---|
+| 10 words | 1 / 3 | 2 / 3 | 0 / 3 |
+| 46 words | 0 / 3 | 0 / 3 | 1 / 3 |
+| 1,673 words | 3 / 3 | 3 / 3 | 3 / 3 |
+
+::: {.takeaway}
+The 1,673-word recipe asks for these outputs by name. They make the work easier to inspect; they do not show that it is valid.
+:::
+
+::: {.notes}
+Counts from scoring.json. "A test on past data guided a choice" means a held-back window of past data informed a decision. Fable's third 10-word attempt did that and also later used feedback from the test week, which is why it is flagged. A range whose hit rate has been measured is not necessarily a reliable range. Do not treat the label "research-grade" or the number of documents as proof of quality.
+:::
+
+## Giving a range did not make the range reliable {#intervals .tight}
+
+![](figures/exp-coverage.png){.figtop .nostretch height="360"}
+
+::: {.belowtext}
+Fable 5.1, 1,673-word attempts. Ranges meant to hold the true value 80% of the time held it 57.1%, 50.6% and 48.8% of the time; the 95% ranges 94.0%, 91.7% and 83.3%.
+:::
+
+::: {.notes}
+The sentence to say: an 80% range should hold the true value 80% of the time; here it held it about half the time. Source: the three Fable metrics.json files for the 1,673-word attempts, and RESULTS.md section 4. These hit rates were measured on one time series whose hours depend on each other; they are not a general guarantee for other data. The write-ups suggest a mismatch: the method was trained with real earlier values as inputs, then used its own predictions during the week (the fair way). That cause has not been isolated here.
+:::
+
+## With the note, all three Astra ten-word attempts delivered a forecast {#astra-note}
+
+**GPT-6-Astra, 10 words plus the note, three attempts**
+
+| What we looked at | Across the three attempts |
+|---|---|
+| Average error | 2.71%, 3.63%, 4.47% |
+| A test on past data guided a choice | 3 / 3 |
+| Wrote up its methods | 3 / 3 |
+| Gave a range showing how sure it was | 2 / 3 |
+
+::: {.takeaway}
+The audit records that none of the three attempts scored the week it was predicting. We computed these errors afterwards.
+:::
+
+::: {.notes}
+Sources: astraos_L1_r1–r3, results.csv and scoring.json. Each attempt's audit note (the audit_note field) says in so many words that the assistant did not score the test week; RESULTS.md section 9.3 says the same. That claim rests on those notes, not on the final_scoring_only label alone. These outputs came from a short task plus operating instructions, in this setup. Fable never received the note and the routes differ, so this is not a controlled comparison of how disciplined the models are. Only two of the three Astra attempts produced a range.
+:::
+
+## The harness changed mid-experiment, so time and cost cannot be compared {#harness-backup .tight}
+
+- A keep-alive (to keep a long attempt running) was added for the 1,673-word attempts; the original 10-word and 46-word attempts ran without it
+- Some attempts stopped while waiting for a job running in the background; some later attempts were resumed
+- The computer sleeping, and jobs running at the same time, distort any comparison of elapsed time
+- Installing software, using the internet and occasionally asking a second AI to review mean an attempt did more than the model alone
+
+::: {.takeaway}
+Whether an attempt finished, how long it took and what it cost need their own accounting. A saved score does not show them.
+:::
+
+::: {.notes}
+Sources: DESIGN.md sections 3, 9 and 11–13, and RESULTS.md sections 4, 6, 9.4 and 10. Some OpenAI attempts called Claude models as reviewers; one Fable attempt called Codex. The assistant worked inside a filesystem sandbox with disclosed exceptions; this was not a sealed, model-only evaluation. No claim is made about which vendor is faster or cheaper.
+:::
+
+## An upgrade changes behaviour too {#upgrade-behaviour}
+
+- A new version may change how the assistant asks questions, follows old instructions, uses tools, or decides it is done
+- OpenAI's current documentation: Astra pauses when standing instructions (what OpenAI calls a "skill") are unclear or conflict
+- Anthropic's current documentation: Fable 5.1 changed how it reports progress, when it counts a task as finished, and how closely it sticks to the task
+
+::: {.takeaway}
+When you move to a new model version, check its behaviour as well as its final answers.
+:::
+
+::: {.notes}
+Sources checked on 6 September: https://developers.openai.com/api/docs/guides/latest-model (the section "Astra Instruction following and autonomy") and https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1 . These are the vendors' own descriptions, not a measured ranking between vendors.
+:::
+
+## Some instructions last; others need a retest after every upgrade {#durable}
+
+| Always spell out, whatever the model | Check again after a change of model or of harness |
+|---|---|
+| The scientific question, and what information the assistant may use | Which software libraries and which modelling recipe to use |
+| Where the data came from, and what must stay confidential | How the task is split into steps and handed from one to the next |
+| The checks a result must pass, and the outputs required | Its settings, and which tools it may use |
+| How far it may go, and what it may do without asking | Workarounds written for an older model's habits |
+
+::: {.takeaway}
+Keep the purpose of a set of standing instructions (what OpenAI calls a "skill"). Change its steps when the evidence shows they need to change.
+:::
+
+::: {.notes}
+This is a recommendation drawn from the case study, not something we tested. The idea is to separate the requirements that stay stable from the implementation choices. Where instruction files live, and how tools find saved instruction sets, differs between tools and versions, so check the actual documentation for your tool.
+:::
+
+## Before you switch to a new model, run a small check {#migration-check}
+
+- Keep a few typical tasks, and write down what a good result looks like
+- Write down the model, the harness version, its settings and the tools it can use
+- Run your usual work more than once on the new setup, and look at what failed, where it paused, what it produced and what it cost
+- Change one relevant instruction or setting, then compare again
+
+::: {.notes}
+This is suggested practice, not a controlled migration trial that was performed here. Check scientific validity, not only whether the code runs. Keep the previous setup available. Before testing more prompt revisions on this dataset, pick new past start dates (forecast origins) to forecast from. "The software around the model" is what the run records call the harness.
+:::
+
+## Next time, I would write the instructions like this {#revised-brief .tight}
+
+- Forecast the 168 hours from midnight, 1 January 2020 (UTC), using only what was known at that moment
+- Choose the method on earlier periods and fix it before the target week; save predictions, code and a short write-up
+- Report how often the range held the true value on earlier periods; we score the target week afterwards
+- Nobody will answer: decide the ordinary details yourself, write them down, and say if anything stops you making a valid forecast
+
+::: {.takeaway}
+Proposed for a future test, not the instructions behind today's results.
+:::
+
+::: {.notes}
+The proposed brief, in full: "Forecast the 168 hours starting 2020-01-01 00:00 UTC from that single origin. Use only information available before it, including during feature construction and model selection. Choose methods using earlier validation windows. Freeze the choice before evaluating the target week. Save timestamped predictions, code and a short account of assumptions and checks. Measure interval coverage on validation. The evaluator will score the target week after delivery. This is an unattended run. Resolve ordinary implementation choices within scope and document them. Report any blocker that prevents a valid forecast." No claim is made that this brief does better than the frozen prompts. A future test should keep the target week's answers away from the assistant, pin the start moment, and compare on new start dates. This draft leaves out the prescribed 24-hour input list and the contradictory instruction to pick the winner on the test week.
+:::
+
+## Every number in this talk can be traced to these sources {#sources .tight}
+
+::: {.smaller}
+| Source | What it holds |
+|---|---|
+| [Experiment repository](https://github.com/DermotOBrien-EC/LLM_coding_practical_example_JRC_LEGENT_presentation_15_05_26) | The exact requests, the data files and their checksums, the code and the records of every attempt |
+| [OpenAI model guidance](https://developers.openai.com/api/docs/guides/latest-model) | How Astra behaves and how to instruct it |
+| [Fable 5.1 prompting guide](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1) | What changed in its behaviour, and checks to run when moving to it |
+| [Anthropic engineering study](https://www.anthropic.com/engineering/harness-design-long-running-apps) | Adapting the harness to how the model behaves |
+:::
+
+Evidence snapshot: **6 September 2026** (WORKSHOP_REVIEW.md records the limitations and where each source is). The charts and the second-AI marks were added on 10 September from the same records.
+
+::: {.notes}
+Every number on the main slides traces to results.csv and scoring.json at commit b352093 of the experiment repository; WORKSHOP_REVIEW.md on the deck's branch records the audit. The second-AI marks (three backup slides) are recorded in research/ai-review-2026-09-10.md, made on 10 September, not audited.
+:::

@@ -1,0 +1,37 @@
+# ---------------------------------------------------------------------------
+# Project + format configuration for the EC / JRC reveal.js deck.
+#
+# Everything that is deck-wide lives here, NOT in index.qmd's front matter.
+# index.qmd carries only: title, subtitle, author, date, date-format,
+# title-slide-attributes.
+# ---------------------------------------------------------------------------
+project:
+  type: default
+  # Pin the render list. Without this, a bare `quarto render` would also pick
+  # up README.md and turn it into a stray README.html.
+  render:
+    - index.qmd
+
+format:
+  revealjs:
+    theme: [default, ec-jrc.scss]
+    width: 1280
+    height: 720
+    # Reveal's default margin (0.1) insets every section by 5 % a side, which
+    # stops CSS-painted section backgrounds (the .divider / .outro / cover
+    # gradient) from bleeding to the slide edge. The theme owns the insets
+    # instead — see $slide-pad-* in ec-jrc.scss.
+    margin: 0
+    slide-number: c/t
+    aspect-ratio: "16:9"
+    transition: none
+    background-transition: none
+    incremental: false
+    fig-align: center
+    link-external-newwindow: true
+    # head.html rewrites the stray <section>s Pandoc emits for `::: {.tipcard}`
+    # blocks that start with a heading — reveal.js would otherwise treat them
+    # as vertical slides and blank out later slides. See the file for details.
+    include-in-header: assets/head.html
+    include-after-body: assets/footer.html
+    embed-resources: false

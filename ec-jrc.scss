@@ -1,0 +1,1410 @@
+/*-- scss:defaults --*/
+// ===========================================================================
+//  European Commission / Joint Research Centre corporate theme for reveal.js
+//  ------------------------------------------------------------------------
+//  Ported from the official EC/JRC PowerPoint corporate template
+//  (`_old/C4_AI_slides_v3.pptx`). All colours, the gradient angle and the
+//  logo geometry below were read out of the OOXML and are authoritative —
+//  see README.md ("How to modify the look") before changing them.
+//
+//  Canvas: 1280 x 720 px  (= 13.33 x 7.5 in, the PowerPoint slide size)
+//  Font:   Arial (theme major + minor font)
+// ===========================================================================
+
+// ---------------------------------------------------------------------------
+//  1. JRC colour palette  (theme1.xml, colour scheme "JRC colour palette")
+// ---------------------------------------------------------------------------
+$ec-indigo:     #4E51A5;   // dk2 / tx2 — primary. Titles, bullets, bold runs.
+$ec-purple:     #9874DF;   // accent1
+$ec-periwinkle: #8294F3;   // accent2
+$ec-sky:        #45B9EB;   // accent3
+$ec-teal:       #64D3D4;   // accent4 — chapter-gradient end
+$ec-gold:       #EAC04B;   // accent5
+$ec-coral:      #FF8179;   // accent6
+$ec-link:       #3344DD;   // hlink
+$ec-bullet:     #2B91C5;   // slide master's own body/bullet colour
+$ec-grey-bg:    #EDEDED;   // lt2
+$ec-black:      #000000;   // dk1
+$ec-white:      #FFFFFF;   // lt1
+$eu-blue:       #003399;   // official EU flag blue  (logo only)
+$eu-yellow:     #FFCC00;   // official EU flag yellow (accents only)
+
+// Derived greys (not in the pptx palette; used for furniture)
+$ec-grey:       #6B7078;   // footers, slide numbers, source lines
+$ec-grey-line:  #D5D7DC;   // hairlines
+$ec-card-bg:    #FAFAFC;   // card fill — "barely there"
+$ec-card-accent-bg: #EFEFF7; // highlighted card fill (light lavender)
+$ec-quote-plate:#D6E0FF;   // the quote layout's picture plate
+
+// ---------------------------------------------------------------------------
+//  2. The corporate gradient
+//      PowerPoint <a:lin ang="18600000"> = 310 deg OOXML  ==>  CSS 40deg
+//      Four stops, from slideLayout1.xml / slideLayout2.xml.
+// ---------------------------------------------------------------------------
+$ec-gradient: linear-gradient(
+  40deg,
+  #4e51a7 4%,
+  #5781b8 47%,
+  #5da6c5 75%,
+  #65d4d5 100%
+) !default;
+
+// The outro band in the template uses very slightly different stops.
+$ec-gradient-outro: linear-gradient(
+  40deg,
+  #4e52a6 0%,
+  #5781b8 35%,
+  #63d2d4 100%
+) !default;
+
+// ---------------------------------------------------------------------------
+//  3. Slide geometry (px on the 1280 x 720 canvas, from the OOXML placeholders)
+// ---------------------------------------------------------------------------
+$slide-pad-x:       83px !default;  // 6.48 % — title & body left/right margin
+$slide-pad-top:     58px !default;  // 8.39 % — title top edge
+$slide-pad-bottom:  96px !default;  // clears the logo / footer / slide-number band
+
+// EC logo, positive, bottom-right of every content slide
+// (slideMaster1.xml: x 87.97 %, y 86.05 %, w 10.30 %, h 11.11 %)
+$logo-w:            132px !default;
+$logo-h:            80px !default;
+$logo-right:        22px !default;
+$logo-bottom:       20px !default;
+
+// EC logo, negative (white), on the gradient slides
+// (slideLayout1.xml: w 20.87 %, h 13.72 %)
+$logo-white-w:      267px !default;
+$logo-white-h:      99px !default;
+
+// Bottom furniture band
+$furniture-bottom:  4.4% !default;  // slide-number + footer baseline
+$slide-number-left: 5.6% !default;  // 71px — the template's slide-number x
+$footer-left:       10.2% !default; // just right of the slide number
+$footer-right:      15.5% !default; // just left of the EC logo
+
+// ---------------------------------------------------------------------------
+//  4. Typography
+// ---------------------------------------------------------------------------
+$font-family-sans-serif: Arial, "Helvetica Neue", Helvetica, "Segoe UI",
+  sans-serif !default;
+$presentation-font-size-root: 30px !default;
+$presentation-line-height: 1.3 !default;
+
+$presentation-heading-font: $font-family-sans-serif !default;
+$presentation-heading-color: $ec-indigo !default;
+$presentation-heading-line-height: 1.12 !default;
+// The template's titles are Arial *regular*, not bold. The restraint is the look.
+$presentation-heading-font-weight: 400 !default;
+
+$presentation-h1-font-size: 1.95em !default; // 58px — chapter / cover titles
+$presentation-h2-font-size: 1.55em !default; // 46px — content-slide titles (38 pt)
+$presentation-h3-font-size: 1.05em !default;
+$presentation-h4-font-size: 0.9em !default;
+
+// ---------------------------------------------------------------------------
+//  5. Core Quarto/reveal colour hooks
+// ---------------------------------------------------------------------------
+$body-bg: $ec-white !default;
+$body-color: #1a1a1a !default;
+$link-color: $ec-link !default;
+$link-color-hover: $ec-sky !default;
+$selection-bg: rgba($ec-periwinkle, 0.45) !default;
+$text-muted: $ec-grey !default;
+$border-color: $ec-grey-line !default;
+$presentation-list-bullet-color: $ec-indigo !default;
+$code-block-bg: #f6f7fb !default;
+$code-block-border-color: $ec-grey-line !default;
+$code-color: #1f2d5c !default;
+$presentation-slide-text-align: left !default;
+$presentation-title-slide-text-align: left !default;
+
+/*-- scss:rules --*/
+// ===========================================================================
+//  Asset URLs  —  READ THIS BEFORE CHANGING THE PATHS
+//  ---------------------------------------------------------------------------
+//  The compiled theme CSS lands five directories deep, at
+//      <doc>_files/libs/revealjs/dist/theme/quarto-<hash>.css
+//  so relative url()s here have to climb five levels to reach the project
+//  root. That is what the three paths below do, and it is correct for a deck
+//  at the project root (index.qmd).
+//
+//  It is only a *fallback*. `assets/footer.html` (include-after-body) re-states
+//  the same three background-image declarations with document-relative paths,
+//  which is what actually paints the logos: an inline <style> in the document
+//  resolves url()s against the document, so it works wherever the deck lives
+//  and does not depend on Quarto's internal output layout.
+//
+//  NOTE: do NOT route these through a CSS custom property. A url() inside a
+//  custom property is resolved against the stylesheet where the variable is
+//  *substituted* (this file, five levels deep), not where it was declared, so
+//  the indirection silently produces the wrong path.
+// ===========================================================================
+$logo-fallback:       url("../../../../../assets/ec-logo.png");
+$logo-white-fallback: url("../../../../../assets/ec-logo-white.png");
+$symbol-fallback:     url("../../../../../assets/jrc-symbol.png");
+
+// ===========================================================================
+//  Slide box
+//  ---------------------------------------------------------------------------
+//  Every top-level slide is forced to the full 720 px slide height. This is
+//  what makes `bottom:`-anchored pseudo-elements (the corner logo, the print
+//  footer) land on the slide edge instead of at the end of the content, and it
+//  is what keeps them correct in `?print-pdf` (where reveal wraps each slide in
+//  a fixed-height `.pdf-page`). Vertical centring is then done with
+//  `align-content`, which — unlike flexbox — survives reveal's
+//  `display: block !important` print rule.
+// ===========================================================================
+//  `.pdf-page > section` is the third selector for a reason: in `?print-pdf`
+//  reveal REPARENTS every slide into a `<div class="pdf-page">`, so the plain
+//  `.slides > section` child selectors stop matching and the deck loses its
+//  padding, its height and its corner logo in the PDF. Keep the three
+//  selectors in step wherever slide geometry is set.
+.reveal .slides > section:not(.stack),
+.reveal .slides > section > section,
+.reveal .slides .pdf-page > section {
+  height: 100%;
+  box-sizing: border-box;
+  padding: $slide-pad-top $slide-pad-x $slide-pad-bottom $slide-pad-x;
+  text-align: left;
+}
+
+.reveal {
+  font-weight: 400;
+  letter-spacing: 0.1px;
+}
+
+.reveal ::selection {
+  background: $selection-bg;
+}
+
+// ===========================================================================
+//  Headings
+// ===========================================================================
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  color: $ec-indigo;
+  font-family: $presentation-heading-font;
+  text-transform: none;
+  letter-spacing: normal;
+  text-shadow: none;
+}
+
+// Content-slide title: indigo, top-left, nothing under it.
+// The EC content slide has no accent rule — see `.ruled` below for the opt-in.
+.reveal h2 {
+  font-size: $presentation-h2-font-size;
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0 0 0.62em 0;
+  padding: 0;
+  border: none;
+}
+
+.reveal h1 {
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0 0 0.4em 0;
+}
+
+.reveal h3 {
+  color: $ec-indigo;
+  font-weight: 700;
+  margin: 0 0 0.3em 0;
+}
+
+.reveal h4 {
+  color: $ec-indigo;
+  font-weight: 700;
+  margin: 0 0 0.25em 0;
+}
+
+// Opt-in accent rule under the title, in the corporate gradient.
+// Off by default: the plain indigo title *is* the EC look.
+.reveal section.ruled > h2,
+.reveal h2.ruled {
+  padding-bottom: 0.22em;
+  margin-bottom: 0.45em;
+  border-bottom: 4px solid transparent;
+  border-image: $ec-gradient 1;
+}
+
+// ===========================================================================
+//  Body text, links, lists
+// ===========================================================================
+.reveal p {
+  margin: 0 0 0.55em 0;
+}
+
+.reveal a {
+  color: $ec-link;
+  text-decoration: none;
+  border-bottom: 1px solid rgba($ec-link, 0.35);
+}
+.reveal a:hover {
+  color: $ec-sky;
+  border-bottom-color: rgba($ec-sky, 0.6);
+}
+
+// Bold runs inside body text are indigo — a consistent tell of this template.
+.reveal strong,
+.reveal b {
+  color: $ec-indigo;
+  font-weight: 700;
+}
+.reveal em {
+  font-style: italic;
+}
+
+.reveal ul,
+.reveal ol {
+  margin: 0 0 0.5em 1.05em;
+  padding-left: 0;
+}
+.reveal ul {
+  list-style-type: disc;
+}
+.reveal li {
+  margin-bottom: 0.22em;
+}
+.reveal li::marker {
+  color: $ec-indigo;
+}
+.reveal ul ul > li::marker,
+.reveal ol ol > li::marker {
+  color: $ec-sky;
+}
+.reveal ul ul,
+.reveal ol ol,
+.reveal ul ol,
+.reveal ol ul {
+  margin-top: 0.18em;
+  font-size: 0.9em;
+}
+
+.reveal blockquote {
+  border-left: 4px solid $ec-indigo;
+  background: rgba($ec-indigo, 0.05);
+  padding: 0.5em 0.9em;
+  font-style: normal;
+  box-shadow: none;
+  width: auto;
+}
+
+.reveal code {
+  color: $code-color;
+}
+
+// ===========================================================================
+//  Corner EC logo  —  pure CSS, so it survives ?print-pdf
+//  `::after` on the slide box; `::before` is reserved for the JRC watermark.
+// ===========================================================================
+.reveal .slides > section:not(.stack)::after,
+.reveal .slides > section > section::after,
+.reveal .slides .pdf-page > section::after {
+  content: "";
+  position: absolute;
+  right: $logo-right;
+  bottom: $logo-bottom;
+  width: $logo-w;
+  height: $logo-h;
+  background-image: $logo-fallback;
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 4;
+}
+
+// Reveal already hides section pseudo-elements in overview mode; be explicit
+// for the vertical-stack wrapper, which must never carry a logo of its own.
+.reveal .slides section.stack::after {
+  content: none;
+}
+
+// Slides that must not carry the corner logo
+.reveal .slides section.nologo::after,
+.reveal .slides section.fullbleed::after {
+  content: none;
+}
+
+// ===========================================================================
+//  Gradient slides: cover, .divider, .outro
+// ===========================================================================
+%ec-gradient-slide {
+  background: $ec-gradient;
+  color: $ec-white;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  li,
+  strong,
+  b,
+  em,
+  td,
+  th {
+    color: $ec-white;
+  }
+
+  a {
+    color: $ec-white;
+    border-bottom-color: rgba($ec-white, 0.55);
+  }
+
+  li::marker {
+    color: rgba($ec-white, 0.85);
+  }
+
+  strong,
+  b {
+    font-weight: 700;
+  }
+
+  // The white EC logo replaces the positive one.
+  &::after {
+    content: "";
+    width: $logo-white-w;
+    height: $logo-white-h;
+    right: $logo-right;
+    bottom: $logo-bottom;
+    background-image: $logo-white-fallback;
+  }
+}
+
+#title-slide,
+.reveal .slides section.divider,
+.reveal .slides section.outro {
+  @extend %ec-gradient-slide;
+}
+
+// The faint JRC circle watermark down the right-hand edge.
+// Max alpha in the source PNG is 52/255 — it is *meant* to be barely visible.
+%ec-watermark {
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 31.1%; // 398px — the template's crop
+    height: 100%;
+    background-image: $symbol-fallback;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: cover;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+#title-slide,
+.reveal .slides section.divider,
+.reveal .slides section.outro {
+  @extend %ec-watermark;
+}
+
+// keep real content above the watermark
+#title-slide > *,
+.reveal .slides section.divider > *,
+.reveal .slides section.outro > * {
+  position: relative;
+  z-index: 1;
+}
+
+// ---------------------------------------------------------------------------
+//  Cover slide  (slideLayout1.xml)
+// ---------------------------------------------------------------------------
+#title-slide,
+div.reveal div.slides section.quarto-title-block {
+  text-align: left;
+  align-content: end;
+  padding: $slide-pad-top $slide-pad-x 130px $slide-pad-x;
+}
+
+#title-slide .title {
+  font-size: 2em; // 60 pt in the template
+  font-weight: 400;
+  line-height: 1.08;
+  margin: 0 0 0.25em 0;
+  max-width: 66%;
+}
+#title-slide .subtitle {
+  font-size: 0.95em; // 24 pt
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0 0 1.1em 0;
+  max-width: 66%;
+  opacity: 0.95;
+}
+#title-slide .quarto-title-authors,
+#title-slide .author,
+#title-slide .institute {
+  font-size: 0.62em; // 16 pt
+  font-weight: 700;
+  margin: 0 0 0.15em 0;
+  padding: 0;
+  display: block;
+  text-align: left;
+}
+#title-slide .quarto-title-authors .quarto-title-author {
+  padding: 0;
+  text-align: left;
+}
+#title-slide .date {
+  font-size: 0.62em;
+  font-weight: 400;
+  opacity: 0.9;
+  margin: 0;
+}
+
+// ---------------------------------------------------------------------------
+//  Chapter / section divider  (slideLayout2.xml)
+// ---------------------------------------------------------------------------
+.reveal .slides section.divider {
+  align-content: center;
+  padding-right: 33%; // keep text clear of the watermark
+}
+.reveal .slides section.divider h1,
+.reveal .slides section.divider h2 {
+  font-size: 1.95em; // 60 pt
+  font-weight: 400;
+  line-height: 1.08;
+  margin: 0 0 0.55em 0;
+  border: none;
+}
+// The deck's dividers carry a "Question: …" / "Speaker: …" body line.
+.reveal .slides section.divider p {
+  font-size: 0.8em; // 24 pt
+  line-height: 1.4;
+  margin: 0 0 0.3em 0;
+  max-width: 96%;
+}
+.reveal .slides section.divider p strong {
+  font-weight: 700;
+}
+
+// ---------------------------------------------------------------------------
+//  Outro  (slideLayout37.xml)
+// ---------------------------------------------------------------------------
+.reveal .slides section.outro {
+  align-content: center;
+  text-align: center;
+  padding-right: $slide-pad-x;
+}
+.reveal .slides section.outro h1,
+.reveal .slides section.outro h2 {
+  font-size: 2.2em;
+  font-weight: 400;
+  text-align: center;
+  margin: 0 0 0.35em 0;
+}
+.reveal .slides section.outro p {
+  text-align: center;
+  font-size: 0.95em;
+}
+.reveal .slides section.outro::before {
+  opacity: 0.4;
+}
+
+// The template's real CC-BY block, as small print.
+.reveal .copyright {
+  font-size: 0.4em; // 12 pt
+  line-height: 1.35;
+  text-align: left;
+  max-width: 73%; // 938 px, the template's disclaimer width
+  margin: 1.6em 0 0 0;
+  opacity: 0.95;
+}
+.reveal .copyright p {
+  font-size: 1em;
+  text-align: left;
+  margin: 0 0 0.5em 0;
+}
+.reveal .copyright p:first-child {
+  font-weight: 700;
+}
+.reveal .copyright a {
+  text-decoration: underline;
+  border-bottom: none;
+}
+// On the (white) content slides the copyright block is near-black.
+.reveal .slides section:not(.divider):not(.outro) .copyright {
+  color: $ec-black;
+}
+// The outro is centred, so centre the small print with it.
+.reveal .slides section.outro .copyright {
+  margin: 1.4em auto 0;
+  max-width: 78%;
+}
+.reveal .slides section.outro .copyright p {
+  text-align: center;
+}
+
+// ===========================================================================
+//  .statement — the deck's rhythm slides: one very large centred sentence
+// ===========================================================================
+.reveal .slides section.statement {
+  align-content: center;
+  text-align: center;
+  padding: 70px 130px 110px 130px;
+}
+.reveal .slides section.statement > h2,
+.reveal .slides section.statement > h1 {
+  font-size: 1.85em;
+  font-weight: 400;
+  line-height: 1.18;
+  color: $ec-indigo;
+  text-align: center;
+  border: none;
+  margin: 0 auto;
+  max-width: 20em;
+}
+.reveal .slides section.statement > h2 + * {
+  margin-top: 0.8em;
+}
+.reveal .slides section.statement p,
+.reveal .slides section.statement ul,
+.reveal .slides section.statement ol {
+  text-align: center;
+  list-style-position: inside;
+  margin-left: 0;
+  font-size: 1.05em;
+}
+
+// ===========================================================================
+//  .fullbleed — the slide is one edge-to-edge image
+// ===========================================================================
+.reveal .slides section.fullbleed {
+  padding: 0;
+}
+.reveal .slides section.fullbleed > h1,
+.reveal .slides section.fullbleed > h2 {
+  display: none;
+}
+.reveal .slides section.fullbleed p,
+.reveal .slides section.fullbleed figure,
+.reveal .slides section.fullbleed .quarto-figure {
+  margin: 0;
+}
+// !important throughout: Quarto's auto-stretch adds .r-stretch to a lone
+// image and reveal then writes an inline height on it.
+.reveal .slides section.fullbleed img {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover;
+  margin: 0 !important;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+// ===========================================================================
+//  .quote-slide  (slideLayout7.xml)
+//  Picture left on a pale plate, quotation right, decorative quote mark.
+// ===========================================================================
+.reveal .slides section.quote-slide {
+  padding: $slide-pad-top $slide-pad-x $slide-pad-bottom 640px;
+  align-content: center;
+}
+.reveal .slides section.quote-slide > h2 {
+  position: absolute;
+  left: $slide-pad-x;
+  top: $slide-pad-top;
+  width: 87%;
+  margin: 0;
+}
+// The picture: exactly the template's rounded plate, absolutely placed so the
+// layout does not depend on how Quarto happened to wrap the image. Quarto's
+// auto-stretch may leave a bare <img class="r-stretch"> as a direct child, or
+// wrap it in <p> / <figure> / div.quarto-figure — all four are handled, and
+// !important is needed because reveal writes an inline height on .r-stretch.
+.reveal .slides section.quote-slide > img,
+.reveal .slides section.quote-slide > p:has(> img),
+.reveal .slides section.quote-slide > figure,
+.reveal .slides section.quote-slide > .quarto-figure {
+  position: absolute !important;
+  left: 87px;
+  top: 190px;
+  width: 513px !important;
+  height: 445px !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  background: $ec-quote-plate;
+  border-radius: 42px;
+  overflow: hidden;
+  object-fit: cover;
+  border: none;
+  box-shadow: none;
+}
+// when the image is wrapped, collapse the wrapper chain onto the plate
+.reveal .slides section.quote-slide > :not(img) figure,
+.reveal .slides section.quote-slide > :not(img) p,
+.reveal .slides section.quote-slide > :not(img) .quarto-figure {
+  margin: 0;
+  height: 100%;
+}
+.reveal .slides section.quote-slide > :not(img) img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover;
+  margin: 0;
+  border: none;
+  border-radius: 42px;
+  box-shadow: none;
+}
+// big decorative quote mark, in indigo, at the top-left of the quotation
+.reveal .slides section.quote-slide::before {
+  content: "\201C";
+  position: absolute;
+  left: 622px;
+  top: 118px;
+  font-family: $font-family-sans-serif;
+  font-size: 150px;
+  line-height: 1;
+  color: $ec-indigo;
+  opacity: 0.85;
+  pointer-events: none;
+}
+.reveal .slides section.quote-slide p {
+  font-size: 1.05em;
+  line-height: 1.35;
+  margin: 0 0 0.6em 0;
+}
+.reveal .slides section.quote-slide p:last-child {
+  font-size: 0.72em;
+  color: $ec-grey;
+}
+
+// ===========================================================================
+//  .tight  /  .nologo
+// ===========================================================================
+.reveal .slides section.tight > h1,
+.reveal .slides section.tight > h2 {
+  margin-bottom: 0.22em;
+}
+
+// ===========================================================================
+//  Block / div classes
+// ===========================================================================
+.reveal .takeaway {
+  background: rgba($ec-indigo, 0.07);
+  border-left: 6px solid $ec-indigo;
+  border-radius: 0 6px 6px 0;
+  padding: 0.45em 0.85em;
+  margin: 0.5em 0;
+  font-weight: 500;
+}
+.reveal .takeaway > :last-child {
+  margin-bottom: 0;
+}
+
+.reveal .callout-box {
+  background: $ec-grey-bg;
+  border-left: 6px solid $ec-sky;
+  border-radius: 0 6px 6px 0;
+  padding: 0.45em 0.85em;
+  margin: 0.5em 0;
+}
+.reveal .callout-box > :last-child {
+  margin-bottom: 0;
+}
+
+.reveal .source {
+  font-size: 0.5em;
+  line-height: 1.3;
+  color: $ec-grey;
+  margin-top: 0.6em;
+}
+.reveal .source p {
+  margin-bottom: 0.2em;
+}
+.reveal .source a {
+  color: $ec-grey;
+  border-bottom-color: rgba($ec-grey, 0.4);
+}
+
+.reveal .belowtext {
+  font-size: 0.86em;
+}
+.reveal .belowtext.center,
+.reveal .belowtext .center {
+  text-align: center;
+}
+
+.reveal .capleft {
+  font-size: 0.62em;
+  color: $ec-grey;
+  text-align: left;
+  margin-top: 0.3em;
+}
+
+.reveal .roomy {
+  font-size: 1.02em;
+}
+.reveal .roomy li {
+  margin-bottom: 0.7em;
+  line-height: 1.4;
+}
+.reveal .roomy p {
+  margin-bottom: 0.7em;
+}
+
+.reveal .smaller {
+  font-size: 0.8em;
+}
+.reveal .muted {
+  color: $ec-grey;
+}
+.reveal .center {
+  text-align: center;
+}
+.reveal .big {
+  font-size: 1.25em;
+}
+.reveal .huge {
+  font-size: 1.8em;
+  line-height: 1.16;
+  color: $ec-indigo;
+}
+.reveal .spacer {
+  display: block;
+  height: 0.8em;
+}
+
+// Vertically centre a block inside the slide's body area.
+.reveal .vscenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 440px;
+}
+
+.reveal .twocol-eq {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 44px;
+  row-gap: 0.2em;
+  align-items: start;
+}
+.reveal .twocol-eq > :first-child > :first-child,
+.reveal .twocol-eq > :nth-child(2) > :first-child {
+  margin-top: 0;
+}
+
+// ---------------------------------------------------------------------------
+//  .tipgrid / .tipcard — 2 x 2 cards
+//  Card anatomy (matches the EC-typeset originals):
+//     #### TIP 3      -> small bold uppercase eyebrow, near-black
+//     first paragraph -> bold indigo headline
+//     the rest        -> small near-black body text
+// ---------------------------------------------------------------------------
+.reveal .tipgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 22px;
+  row-gap: 18px;
+  align-items: stretch;
+}
+
+.reveal .tipcard {
+  background: $ec-card-bg;
+  border: 2px solid $ec-indigo;
+  border-left-width: 6px;
+  border-radius: 12px;
+  padding: 14px 20px 14px 18px;
+  font-size: 0.58em;
+  line-height: 1.32;
+  color: $body-color;
+}
+.reveal .tipcard > :last-child {
+  margin-bottom: 0;
+}
+// the eyebrow
+.reveal .tipcard h1,
+.reveal .tipcard h2,
+.reveal .tipcard h3,
+.reveal .tipcard h4,
+.reveal .tipcard h5,
+.reveal .tipcard h6 {
+  font-size: 0.86em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #1a1a1a;
+  margin: 0 0 0.35em 0;
+  line-height: 1.2;
+}
+// the headline
+.reveal .tipcard > p:first-of-type {
+  font-weight: 700;
+  color: $ec-indigo;
+  font-size: 1.1em;
+  line-height: 1.22;
+  margin: 0 0 0.4em 0;
+}
+.reveal .tipcard p {
+  margin: 0 0 0.35em 0;
+}
+.reveal .tipcard ul,
+.reveal .tipcard ol {
+  margin: 0 0 0.3em 0.95em;
+}
+.reveal .tipcard li {
+  margin-bottom: 0.1em;
+}
+// highlighted / "closing thesis" card
+.reveal .tipcard.accent {
+  background: $ec-card-accent-bg;
+  border-color: $ec-indigo;
+  border-width: 3px;
+  border-left-width: 8px;
+}
+// a 3-up or 1-up row of the same cards
+.reveal .tipgrid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.reveal .tipgrid.cols-1 {
+  grid-template-columns: 1fr;
+}
+
+// ---------------------------------------------------------------------------
+//  .venn — concentric nested rings.  Direct children become the rings,
+//          outermost first, each labelled at its top edge.
+// ---------------------------------------------------------------------------
+.reveal .venn {
+  position: relative;
+  width: 800px;
+  height: 430px;
+  margin: 0.2em auto;
+  font-size: 0.62em;
+}
+.reveal .venn > * {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  border: 3px solid;
+  border-radius: 26px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.15;
+  padding: 8px 10px 0 10px;
+  margin: 0;
+}
+.reveal .venn > *:nth-child(1) {
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-color: $ec-indigo;
+  color: $ec-indigo;
+  background: rgba($ec-indigo, 0.05);
+}
+.reveal .venn > *:nth-child(2) {
+  top: 14%;
+  bottom: 4%;
+  width: 79%;
+  border-color: $ec-periwinkle;
+  color: #4F63D8;
+  background: rgba($ec-periwinkle, 0.1);
+}
+.reveal .venn > *:nth-child(3) {
+  top: 33%;
+  bottom: 9%;
+  width: 57%;
+  border-color: $ec-sky;
+  color: #1580AE;
+  background: rgba($ec-sky, 0.14);
+}
+.reveal .venn > *:nth-child(4) {
+  top: 55%;
+  bottom: 14%;
+  width: 35%;
+  border-color: $ec-teal;
+  color: #1E8A8B;
+  background: rgba($ec-teal, 0.2);
+}
+.reveal .venn > *:nth-child(5) {
+  top: 74%;
+  bottom: 19%;
+  width: 20%;
+  border-color: $ec-gold;
+  color: #9A7A0E;
+  background: rgba($ec-gold, 0.22);
+}
+
+// ---------------------------------------------------------------------------
+//  .flowrow — boxes joined by arrows
+// ---------------------------------------------------------------------------
+.reveal .flowrow {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 54px;
+  margin: 0.5em 0;
+}
+.reveal .flowrow > * {
+  position: relative;
+  flex: 1 1 0;
+  box-sizing: border-box;
+  border: 2px solid $ec-indigo;
+  border-radius: 12px;
+  background: $ec-card-bg;
+  padding: 14px 16px;
+  text-align: center;
+  font-size: 0.75em;
+  line-height: 1.28;
+  margin: 0;
+}
+.reveal .flowrow > * > :last-child {
+  margin-bottom: 0;
+}
+.reveal .flowrow > *:not(:last-child)::after {
+  content: "\2192";
+  position: absolute;
+  right: -42px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  text-align: center;
+  color: $ec-indigo;
+  font-size: 1.5em;
+  line-height: 1;
+  font-weight: 700;
+}
+.reveal .flowrow.noarrows > *::after {
+  content: none;
+}
+.reveal .flowrow.noarrows {
+  gap: 22px;
+}
+
+// ---------------------------------------------------------------------------
+//  .compare — two headed panels side by side
+// ---------------------------------------------------------------------------
+.reveal .compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 28px;
+  align-items: stretch;
+  margin: 0.4em 0;
+}
+.reveal .compare.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.reveal .compare > * {
+  box-sizing: border-box;
+  border: 2px solid $ec-indigo;
+  border-radius: 12px;
+  background: $ec-card-bg;
+  padding: 0 18px 14px 18px;
+  font-size: 0.7em;
+  line-height: 1.32;
+  overflow: hidden;
+}
+.reveal .compare > * > h1,
+.reveal .compare > * > h2,
+.reveal .compare > * > h3,
+.reveal .compare > * > h4,
+.reveal .compare > * > h5,
+.reveal .compare > * > h6 {
+  margin: 0 -18px 0.55em -18px;
+  padding: 0.4em 18px;
+  background: $ec-indigo;
+  color: $ec-white;
+  font-size: 1.05em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.reveal .compare > * > :last-child {
+  margin-bottom: 0;
+}
+.reveal .compare ul,
+.reveal .compare ol {
+  margin-left: 0.95em;
+}
+
+// ---------------------------------------------------------------------------
+//  Level colour modifiers — put them on a child of .flowrow / .compare, or on
+//  a .tipcard, to encode Level 1 / 2 / 3 the way the source deck does.
+//  The class is doubled on purpose: `.reveal .compare > *` and
+//  `.reveal .flowrow > *` also set `border`, at the same specificity, so a
+//  single `.lvl2` would lose to whichever container rule comes last in the
+//  file. `.lvl2.lvl2` raises specificity and makes the outcome independent of
+//  where these rules sit. Do not "simplify" it back to a single class.
+// ---------------------------------------------------------------------------
+.reveal .lvl1.lvl1 {
+  border-color: #9aa0a7;
+}
+.reveal .lvl2.lvl2 {
+  border-color: #e8912d;
+  background: rgba(#e8912d, 0.07);
+}
+.reveal .lvl3.lvl3 {
+  border-color: #d2620a;
+  background: rgba(#d2620a, 0.11);
+  border-width: 3px;
+}
+
+// ---------------------------------------------------------------------------
+//  Card grids fill the content column
+//
+//  Left to themselves, `.tipgrid` and `.compare` are content-height: on a slide
+//  whose only body is a card grid, the cards hug the top and the bottom 40-50 %
+//  of the slide is dead space. The source PowerPoint puts those boxes at
+//  y = 25 % -> 82 % of the slide, i.e. filling the content area, so this is a
+//  fidelity fix as much as a cosmetic one.
+//
+//  A slide that has a card grid as a direct child becomes a flex column, and
+//  the grid is the item that grows. `grid-auto-rows: 1fr` then shares that
+//  height evenly across rows, so the 3+2 tip grid gets two equal rows instead
+//  of a tall row and a short one.
+//
+//  `min-height: 0` is required: a flex item's default `min-height: auto` would
+//  refuse to shrink below its content and reintroduce overflow on the dense
+//  slides (`The experiment` already sits at 663 px of its 664 px budget).
+//
+//  Scoped with `:has()` so slides without a card grid keep plain block layout.
+//  Where `:has()` is unsupported the rule simply does not match and the grids
+//  fall back to hugging their content — the previous behaviour, not a break.
+//
+//  Two non-obvious constraints on the `display` declaration:
+//
+//    * It needs `!important`. reveal.js writes `display` as an INLINE style on
+//      every slide it shows (its `display: "block"` config option), and an
+//      inline style beats any normal stylesheet rule.
+//    * Because of that `!important`, the rule MUST be scoped to `.present`.
+//      reveal hides off-screen slides with an inline `display: none`, so an
+//      unscoped `display: flex !important` would override that and paint the
+//      whole deck on top of itself.
+//
+//  The `?print-pdf` path needs its own rule (see the print block at the foot of
+//  this file) — there reveal reparents every slide into `.pdf-page` and no
+//  slide carries `.present`.
+// ---------------------------------------------------------------------------
+.reveal .slides > section.present:not(.stack):has(> .tipgrid),
+.reveal .slides > section.present:not(.stack):has(> .compare),
+.reveal .slides > section > section.present:has(> .tipgrid),
+.reveal .slides > section > section.present:has(> .compare) {
+  display: flex !important;
+  flex-direction: column;
+}
+
+// `1 0 auto` — grow into spare space, but never shrink below the cards' natural
+// height. Shrinking (`flex: 1 1 auto`) clips: `.compare > *` sets
+// `overflow: hidden` so the indigo panel header can bleed to the panel's rounded
+// edge, and on a dense slide like `The experiment` (five bullets above the
+// boxes) the squeeze silently cut the last line off the Level 3 card.
+.reveal section > .tipgrid,
+.reveal section > .compare {
+  flex: 1 0 auto;
+}
+
+.reveal .tipgrid,
+.reveal .compare {
+  grid-auto-rows: 1fr;
+}
+
+// ===========================================================================
+//  Figures
+// ===========================================================================
+.reveal .slide img,
+.reveal section img {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.reveal figure {
+  margin: 0 0 0.3em 0;
+}
+.reveal figcaption {
+  color: $ec-grey;
+  font-size: 0.55em;
+  line-height: 1.25;
+}
+
+.reveal .r-stretch {
+  max-height: 470px;
+}
+
+// Centre stretched images. Quarto's auto-stretch hoists a lone image out of its
+// paragraph and leaves a bare `<img class="r-stretch">` as a direct child of the
+// slide; an <img> is inline, so it lands hard against the left padding edge
+// while the sized classes below (.figtop, .bigfig, …) centre themselves. This
+// is why `fig-align: center` appears to be ignored on `.r-stretch` slides —
+// there is no figure element left for it to act on.
+.reveal .slides section > img.r-stretch {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reveal img.figtop {
+  max-height: 410px !important;
+  width: auto;
+  display: block;
+  margin: 0 auto 0.3em;
+}
+.reveal img.bigfig {
+  max-height: 460px !important;
+  width: auto;
+  display: block;
+  margin: 0 auto 0.3em;
+}
+.reveal img.tallfig {
+  max-height: 630px !important;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+.reveal img.stackfig {
+  max-height: 190px !important;
+  width: auto;
+  display: block;
+  margin: 0.15em auto;
+}
+.reveal img.fillcol,
+.reveal .columns img.fillcol {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 520px !important;
+  object-fit: contain;
+}
+.reveal img.shadow {
+  border: 1px solid $ec-grey-line;
+  border-radius: 4px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+}
+
+// Never let a column image push content off the slide.
+.reveal .columns {
+  align-items: flex-start;
+}
+.reveal .columns img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 470px;
+  object-fit: contain;
+}
+
+// ===========================================================================
+//  Tables
+// ===========================================================================
+.reveal table {
+  font-size: 0.68em;
+  border-collapse: collapse;
+  margin: 0.3em 0;
+}
+.reveal table th {
+  background: $ec-indigo;
+  color: $ec-white;
+  font-weight: 700;
+  border: none;
+  padding: 0.3em 0.6em;
+  text-align: left;
+}
+.reveal table td {
+  border-bottom: 1px solid $ec-grey-line;
+  padding: 0.25em 0.6em;
+}
+.reveal table tr:last-child td {
+  border-bottom: 2px solid $ec-indigo;
+}
+
+// ===========================================================================
+//  Furniture: per-slide footer + slide number
+//  Both sit bottom-LEFT; the bottom-right corner belongs to the EC logo.
+// ===========================================================================
+
+// Fixed footer element, populated by assets/footer.html on slidechange.
+#ec-footer {
+  position: fixed;
+  left: $footer-left;
+  right: $footer-right;
+  bottom: $furniture-bottom;
+  z-index: 30;
+  color: $ec-grey;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.25;
+  text-align: left;
+  pointer-events: none;
+}
+#ec-footer a {
+  color: $ec-grey;
+  border-bottom: none;
+}
+
+// Per-slide footer used in ?print-pdf (one per page, so every PDF page keeps
+// its own citation). Positioned inside the slide box, not fixed.
+.reveal .ec-slide-footer {
+  position: absolute;
+  left: 130px;
+  right: 200px;
+  bottom: 26px;
+  color: $ec-grey;
+  font-size: 14px;
+  line-height: 1.25;
+  text-align: left;
+  z-index: 4;
+}
+
+// Quarto's own footer machinery is unused here.
+.reveal .footer,
+.reveal .footer.footer-default {
+  display: none !important;
+}
+
+.reveal .slide-number {
+  left: $slide-number-left;
+  right: auto;
+  bottom: $furniture-bottom;
+  top: auto;
+  background: transparent;
+  color: $ec-grey;
+  font-size: 14px;
+  font-family: $font-family-sans-serif;
+}
+.reveal .slide-number a {
+  color: $ec-grey;
+}
+.reveal.has-logo .slide-number {
+  left: $slide-number-left;
+  right: auto;
+  bottom: $furniture-bottom;
+  top: auto;
+}
+// print-pdf clone — sits left of the per-page footer, same as on screen
+.reveal .slide-number-pdf {
+  left: 71px;
+  right: auto;
+  bottom: 26px;
+  top: auto;
+  color: $ec-grey;
+  font-size: 14px;
+}
+
+// No furniture on the deck's "no chrome" slides.
+.reveal[data-ec-slide="fullbleed"] .slide-number,
+.reveal[data-ec-slide="fullbleed"] #ec-footer,
+.reveal[data-ec-slide="divider"] #ec-footer,
+.reveal[data-ec-slide="cover"] .slide-number,
+.reveal[data-ec-slide="cover"] #ec-footer,
+.reveal[data-ec-slide="outro"] .slide-number,
+.reveal[data-ec-slide="outro"] #ec-footer {
+  display: none !important;
+}
+.reveal[data-ec-slide="divider"] .slide-number {
+  color: rgba($ec-white, 0.8);
+}
+// Reveal's own bottom-left chrome would sit on top of the slide number.
+.reveal .slide-menu-button,
+.reveal .slide-chalkboard-buttons {
+  bottom: 4px;
+  left: 8px;
+}
+#title-slide .slide-number-pdf,
+.reveal .slides section.outro .slide-number-pdf,
+.reveal .slides section.fullbleed .slide-number-pdf {
+  display: none !important;
+}
+.reveal .slides section.fullbleed .ec-slide-footer,
+.reveal .slides section.fullbleed .slide-number-pdf,
+.reveal .slides section.outro .slide-number-pdf {
+  display: none !important;
+}
+.reveal .slides section.divider .slide-number-pdf {
+  color: rgba($ec-white, 0.8);
+}
+
+// ===========================================================================
+//  ?print-pdf
+//  ---------------------------------------------------------------------------
+//  Two things reveal's print stylesheet/JS do have to be undone here:
+//    1. `html.reveal-print .reveal .slides section { padding: 0 !important }`
+//       strips the slide margins, so every PDF page would be full-bleed text.
+//    2. reveal JS-centres `.center` slides by writing an inline `top`. Because
+//       the theme already forces `height: 100%` and centres with
+//       `align-content`, that offset just pushes the gradient slides down the
+//       page. Pin them back to the top-left.
+//  Both classes are targeted: reveal 5 adds `reveal-print`, Quarto's export
+//  plugin adds `print-pdf`.
+// ===========================================================================
+html.reveal-print,
+html.print-pdf {
+  .reveal .slides .pdf-page > section,
+  .reveal .slides .pdf-page > section#title-slide {
+    top: 0 !important;
+    left: 0 !important;
+    padding: $slide-pad-top $slide-pad-x $slide-pad-bottom $slide-pad-x !important;
+  }
+  .reveal .slides .pdf-page > section#title-slide {
+    padding-bottom: 130px !important;
+  }
+  .reveal .slides .pdf-page > section.divider {
+    padding-right: 33% !important;
+  }
+  .reveal .slides .pdf-page > section.statement {
+    padding: 70px 130px 110px 130px !important;
+  }
+  .reveal .slides .pdf-page > section.quote-slide {
+    padding-left: 640px !important;
+  }
+  .reveal .slides .pdf-page > section.fullbleed {
+    padding: 0 !important;
+  }
+  // Reveal's print rules can size figures to the page width, ignoring the
+  // content margins. Keep the full chart inside the padded slide.
+  .reveal .slides .pdf-page > section img.figtop {
+    max-width: 100% !important;
+    object-fit: contain;
+  }
+  // Card grids fill the page here too. On screen the same rule is scoped to
+  // `.present`; in print no slide carries that class, and every slide is shown,
+  // so scoping to `.pdf-page > section` is both necessary and safe.
+  .reveal .slides .pdf-page > section:has(> .tipgrid),
+  .reveal .slides .pdf-page > section:has(> .compare) {
+    display: flex !important;
+    flex-direction: column;
+  }
+  // reveal hides the on-screen fixed footer for us; make sure of it
+  #ec-footer {
+    display: none !important;
+  }
+}
+
+// Reveal's own chrome, toned down.
+.reveal .controls {
+  color: $ec-indigo;
+}
+.reveal .progress {
+  color: $ec-indigo;
+  height: 3px;
+}
+
+// ===========================================================================
+//  Speaker notes / misc
+// ===========================================================================
+.reveal .speaker-notes {
+  font-family: $font-family-sans-serif;
+}
+
+// Overview mode: reveal hides section pseudo-elements already, but the
+// gradient backgrounds should still read.
+.reveal.overview .slides section {
+  padding: $slide-pad-top $slide-pad-x $slide-pad-bottom $slide-pad-x;
+}
