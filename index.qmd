@@ -330,34 +330,34 @@ Longer instructions bought more good practice. The note bought the most.
 Say first: the long request bought more good practice from almost every model (the bars lengthen left to right), and with the note GPT-6-Astra shows the most at every length; the one practice nobody managed at 1,673 words is choosing the method without looking at the test score, because the instructions asked for the winner by test-week error. The five practices, from the 6 September audit's per-attempt fields: the forecast itself did not peek; the method was chosen without the test score (the audit's final_scoring_only label); a test on past data guided a choice; a range was given; the methods were written up. Three further audit fields (delivered a score, checked by us, finished without interruption) are on the dot chart and the harness slide. "Nothing delivered" means every attempt at that length stopped or produced no forecast; "not run at this length" means the with-the-note re-run only covered attempts that had stopped.
 
 The counts behind the bars (passed / attempts):
-- 10 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 2/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 10 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 1/3; Gave a range 0/3; Wrote up its methods 0/3
-- 10 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 2/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 3/3
-- 10 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 1/3; Gave a range 2/3; Wrote up its methods 0/3
-- 10 words, GPT-5.5 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 1/3; Tested on past data first 1/3; Gave a range 0/3; Wrote up its methods 0/3
-- 10 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 1/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
-- 10 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 10 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 3/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 3/3
-- 46 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 2/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 46 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 46 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
-- 46 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 1/3
-- 46 words, GPT-5.5 (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 46 words, GPT-5.5, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 2/3; Gave a range 0/3; Wrote up its methods 0/3
-- 46 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 46 words, GPT-5.6-Sol, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
-- 46 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 46 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 3/3
-- 1,673 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 1/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
-- 1,673 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 2/3; Chose the method without the test score 1/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 2/3
-- 1,673 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
-- 1,673 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
-- 1,673 words, GPT-5.5 (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 1/3; Gave a range 1/3; Wrote up its methods 1/3
-- 1,673 words, GPT-5.5, with the note (2 attempts): Forecast itself did not peek 1/2; Chose the method without the test score 0/2; Tested on past data first 1/2; Gave a range 1/2; Wrote up its methods 1/2
-- 1,673 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 1,673 words, GPT-5.6-Sol, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
-- 1,673 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Chose the method without the test score 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
-- 1,673 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Chose the method without the test score 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 10 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 2/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 1/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 2/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 3/3
+- 10 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 1/3; Gave a range 2/3; Wrote up its methods 0/3
+- 10 words, GPT-5.5 (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 1/3; Tested on past data first 1/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 1/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Picked its method before looking at the answers 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 10 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 3/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 3/3
+- 46 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 2/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 1/3
+- 46 words, GPT-5.5 (3 attempts): Forecast itself did not peek 0/3; Picked its method before looking at the answers 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-5.5, with the note (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 2/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 0/3; Picked its method before looking at the answers 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-5.6-Sol, with the note (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Picked its method before looking at the answers 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 46 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 0/3; Wrote up its methods 3/3
+- 1,673 words, Claude Opus 4.7 (May model) (3 attempts): Forecast itself did not peek 1/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 1,673 words, Claude Opus 4.8 (3 attempts): Forecast itself did not peek 2/3; Picked its method before looking at the answers 1/3; Tested on past data first 3/3; Gave a range 2/3; Wrote up its methods 2/3
+- 1,673 words, Claude Opus 5 (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 1,673 words, Claude Fable 5.1 (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 1,673 words, GPT-5.5 (3 attempts): Forecast itself did not peek 0/3; Picked its method before looking at the answers 0/3; Tested on past data first 1/3; Gave a range 1/3; Wrote up its methods 1/3
+- 1,673 words, GPT-5.5, with the note (2 attempts): Forecast itself did not peek 1/2; Picked its method before looking at the answers 0/2; Tested on past data first 1/2; Gave a range 1/2; Wrote up its methods 1/2
+- 1,673 words, GPT-5.6-Sol (3 attempts): Forecast itself did not peek 0/3; Picked its method before looking at the answers 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 1,673 words, GPT-5.6-Sol, with the note (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
+- 1,673 words, GPT-6-Astra (3 attempts): Forecast itself did not peek 0/3; Picked its method before looking at the answers 0/3; Tested on past data first 0/3; Gave a range 0/3; Wrote up its methods 0/3
+- 1,673 words, GPT-6-Astra, with the note (3 attempts): Forecast itself did not peek 3/3; Picked its method before looking at the answers 0/3; Tested on past data first 3/3; Gave a range 3/3; Wrote up its methods 3/3
 :::
 
 ## I asked a second AI to mark all 62 pieces of work {#review-stacked .tight}

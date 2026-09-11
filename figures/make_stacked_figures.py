@@ -64,7 +64,7 @@ def stacked(panels, seg_names, fname, xlabel, notes_out, fmt="count", header=Non
 
 # ---- A: audit checks ----
 CHECKS=[("Forecast itself did not peek",lambda v,r: r["source"]!="none" and peek_kind(v)!="headline"),
-        ("Chose the method without the test score",lambda v,r: v["test_selection"]=="final_scoring_only"),
+        ("Picked its method before looking at the answers",lambda v,r: v["test_selection"]=="final_scoring_only"),
         ("Tested on past data first",lambda v,r: bool(v["validation"])),
         ("Gave a range",lambda v,r: bool(v["intervals"])),
         ("Wrote up its methods",lambda v,r: bool(v["methods_doc"]))]
